@@ -18,7 +18,7 @@ public class Usuario {
 	@Column(length = 30)
 	private String estudios;
 
-	@Column(length = 10) @Required
+	@Column(length = 10)
 	private Date fechaNac;
 
 	@Column(length = 20)
@@ -30,6 +30,6 @@ public class Usuario {
 	@Column(length = 1)
 	private char sexo;
 
-	@Column(length = 30)
+	@Column(length = 30) @Required
 	private String username;
 }

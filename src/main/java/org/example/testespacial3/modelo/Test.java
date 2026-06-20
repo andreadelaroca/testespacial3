@@ -1,8 +1,5 @@
 package org.example.testespacial3.modelo;
-
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 import javax.persistence.*;
 
 @Entity @Getter @Setter
@@ -15,7 +12,7 @@ public class Test {
 	private String nombre;
 	private float tiempoMax;
 
-	@OneToMany
+
 	public Pregunta pregunta;
 
 	public Test(){

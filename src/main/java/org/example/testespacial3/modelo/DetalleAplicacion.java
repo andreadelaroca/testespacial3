@@ -15,8 +15,4 @@ public class DetalleAplicacion {
 	public DetalleAplicacion(){
 
 	}
-
-	public void finalize() throws Throwable {
-
-	}
-}//end DetalleAplicacion
+}
