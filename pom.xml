@@ -23,6 +23,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>javax.persistence-api</artifactId>
+			<version>2.2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.openxava</groupId>
 			<artifactId>openxava-7.7-chat-jdk17</artifactId>
 			<version>${openxava.version}</version>
