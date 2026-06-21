@@ -8,7 +8,8 @@ import org.openxava.annotations.*;
 import java.time.*;
 import org.hibernate.annotations.Where;
 
-@Entity @Getter @Setter @Table(name = "usuario")
+@Entity @Getter @Setter @Table(name = "usuario") @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "dtype")  @Where(clause = "deletedat IS NULL")
 public class Usuario {
 
 	@Id @Hidden @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "usuarioid")

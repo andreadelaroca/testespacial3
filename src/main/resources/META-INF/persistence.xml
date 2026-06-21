@@ -7,7 +7,7 @@
              
     <persistence-unit name="default">
     	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    	<non-jta-data-source>java://comp/env/jdbc/testespacial3DS</non-jta-data-source>
+		<non-jta-data-source>java:comp/env/jdbc/testespacial3DS</non-jta-data-source>
     	<class>org.openxava.session.GalleryImage</class>
     	<class>org.openxava.web.editors.DiscussionComment</class>
     	<class>com.openxava.naviox.model.ConfigurationRecord</class>
@@ -22,7 +22,9 @@
     	<class>com.openxava.naviox.model.User</class>
 		<class>com.openxava.naviox.model.LDAPConfiguration</class>
         <properties>
-            <property name="javax.persistence.schema-generation.database.action" value="update"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+			<property name="hibernate.show_sql" value="true"/>
+			<property name="hibernate.format_sql" value="true"/>
         </properties>
     </persistence-unit>
                     
