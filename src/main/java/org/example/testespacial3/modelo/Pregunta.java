@@ -1,6 +1,6 @@
+package org.example.testespacial3.modelo;
 import javax.persistence.*;
 
-@Entity
 public class Pregunta {
 
 	private String imagen;

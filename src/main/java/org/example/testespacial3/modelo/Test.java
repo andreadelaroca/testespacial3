@@ -1,11 +1,9 @@
-package org.example.testespacial3.modelo;
+
 import lombok.*;
 import javax.persistence.*;
 
-@Entity @Getter @Setter
 public class Test {
 
-	@Column(length = 8)
 	private boolean estado;
 
 	private String instrucciones;
@@ -14,6 +12,7 @@ public class Test {
 
 
 	public Pregunta pregunta;
+	public Pregunta m_Pregunta;
 
 	public Test(){
 

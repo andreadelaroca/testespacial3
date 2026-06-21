@@ -1,7 +1,7 @@
 import javax.persistence.*;
 import java.time.*;
+import javax.lombok.*;
 
-@Entity
 public class DetalleAplicacion {
 
 	private int aciertos;
