@@ -30,6 +30,9 @@ public class DetalleAplicacion {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "testid") @DescriptionsList(descriptionProperties = "nombre")
 	private Test test;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false) @
+	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "sujetoid") @DescriptionsList(descriptionProperties = "nombres" + " " + "apellidos")
 	private Sujeto sujeto;
+
+	@OneToMany(mappedBy = "detalleAplicacion", cascade = CascadeType.ALL) @ListProperties("preguntaid, opcion")
+	private	Collection<Respuesta> respuestas;
 }
