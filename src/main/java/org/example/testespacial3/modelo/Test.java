@@ -1,25 +1,48 @@
 package org.example.testespacial3.modelo;
 import lombok.*;
+import org.openxava.annotations.*;
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
-@Entity @Getter @Setter
+@Entity @Table(name = "test") @Getter @Setter
 public class Test {
 
-	private boolean estado;
+	@Id @Hidden @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "testid")
+	private int id;
 
-	private String instrucciones;
+	@Required @Column(name = "nombre", length = 255)
 	private String nombre;
+
+	@Required @Column(name = "instrucciones") @Stereotype("MEMO")
+	private String instrucciones;
+
+	@Required @Column(name = "tiempomax")
 	private float tiempoMax;
 
+	@Required @Column(name = "estado")
+	private boolean estado;
 
-	public Pregunta pregunta;
-	public Pregunta m_Pregunta;
+	@OneToMany(mappedBy = "test", cascade = CascadeType.ALL) @ListProperties("imagen")
+	public Collection<Pregunta> preguntas;
 
-	public Test(){
+	//tiempos para fines de auditoria
+	@ReadOnly @Column(name = "createdat", updatable = false)
+	private LocalDateTime createdAt;
 
+	@ReadOnly @Column(name = "updatedat")
+	private LocalDateTime updatedAt;
+
+	@Hidden @Column(name = "deletedat")
+	private LocalDateTime deletedAt;
+
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now();
+		this.updatedAt = LocalDateTime.now();
 	}
-
-	public void iniciarTiempo(){
-
+	@PreUpdate
+	protected void onUpdate() {
+		this.updatedAt = LocalDateTime.now();
 	}
 }
