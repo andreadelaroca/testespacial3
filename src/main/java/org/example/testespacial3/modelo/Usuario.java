@@ -33,7 +33,7 @@ public class Usuario {
 	private LocalDate fechaNac;
 
 	@Column(name = "sexo", length = 1)
-	private char sexo;
+	private String sexo;
 
 	@Column(name = "estudios", length = 255)
 	private String estudios;

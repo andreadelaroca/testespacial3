@@ -16,6 +16,6 @@ public class Opcion {
 	private int respuesta;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "preguntaid") @DescriptionsList
+	@JoinColumn(name = "preguntaid") @DescriptionsList(descriptionProperties = "imagen")
 	private Pregunta pregunta;
 }

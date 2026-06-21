@@ -18,8 +18,9 @@ public class DetalleAplicacion {
 	@Required @Column(name = "desaciertos")
 	private int desaciertos;
 
-	@Required @Column(name = "fecha") @DefaultValueCalculator(org.openxava.calculators.CurrentDateCalculator.class)
-	private LocalDate fecha;
+	@Required @Column(name = "fecha") @Temporal(TemporalType.DATE)
+	@DefaultValueCalculator(org.openxava.calculators.CurrentDateCalculator.class)
+	private Date fecha;
 
 	@Required @Column(name = "horainicio")
 	private LocalTime horaInicio;

@@ -13,17 +13,9 @@ public class Respuesta {
 	@Required @Column(name = "opcion")
 	private int opcion;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "preguntaid") @DescriptionsList
-	public Pregunta pregunta;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "preguntaid") @DescriptionsList(descriptionProperties = "imagen")
+	private Pregunta pregunta;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "detalleaplicacionid")
 	private DetalleAplicacion detalleAplicacion;
-
-	public Respuesta(){
-
-	}
-
-	public void finalize() throws Throwable {
-
-	}
-}//end Respuesta
+}
