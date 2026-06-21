@@ -1,15 +1,23 @@
+package org.example.testespacial3.modelo;
 
+import javax.persistence.*;
+import org.openxava.annotations.*;
+import lombok.*;
 
-/**
- * @author aleja
- * @version 1.0
- * @created 18-Jun-2026 2:09:44 PM
- */
+@Entity @Getter @Setter
 public class Respuesta {
 
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Hidden @Column(name = "respuestaid")
+	private int id;
+
+	@Required @Column(name = "opcion")
 	private int opcion;
-	public Pregunta m_Pregunta;
-	public Sujeto m_Sujeto;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "preguntaid") @DescriptionsList
+	public Pregunta pregunta;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "detalleaplicacionid")
+	private DetalleAplicacion detalleAplicacion;
 
 	public Respuesta(){
 
