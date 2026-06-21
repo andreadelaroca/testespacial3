@@ -1,7 +1,8 @@
-
+package org.example.testespacial3.modelo;
 import lombok.*;
 import javax.persistence.*;
 
+@Entity @Getter @Setter
 public class Test {
 
 	private boolean estado;
