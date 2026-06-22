@@ -1,0 +1,61 @@
+.corpus
+{
+	max-width: 500pt;
+	text-align: left;
+	border-left: 1pt solid darkblue;
+	border-right: 1pt solid darkblue;
+	background-color: white;
+	padding: 15pt;
+}
+
+.corpus#content
+{
+	min-height: 100%;
+}
+
+.questionimg
+{
+	border: 1pt solid black;
+}
+
+body
+{
+	font-family: Arial;
+	background-color: rgb(58, 110, 165);
+}
+
+html, body 
+{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+label, input
+{
+	margin-bottom: 12pt;
+}
+
+label:last-child, input:last-child
+{
+	margin-bottom: 0;
+}
+
+p, form, h2, h3, h1
+{
+	font-size: 12pt;
+}
+
+
+h2
+{
+	background-color: black;
+	color: white;
+	padding-top: 5pt;
+	padding-bottom: 5pt;
+}
+
+h3
+{
+	color: darkblue;
+}
