@@ -14,8 +14,8 @@ public class Pregunta {
 	@Id @Hidden @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "preguntaid")
 	private int id;
 
-	@Required @Column(name = "imagen", length = 255) @Stereotype("IMAGE")
-	private String imagen;
+	@Required @Column(name = "imagen") @Stereotype("IMAGE")
+	private byte[] imagen;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "testid") @DescriptionsList(descriptionProperties = "nombre")
 	private Test test;
