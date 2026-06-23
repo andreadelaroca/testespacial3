@@ -1,21 +1,62 @@
 .corpus
 {
+	display:flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.corpus
+{
 	max-width: 500pt;
 	text-align: left;
-	border-left: 1pt solid darkblue;
-	border-right: 1pt solid darkblue;
 	background-color: white;
+	margin: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+h1{margin: 0;}
+
+.body, h2{
 	padding: 15pt;
 }
 
-.corpus#content
+h2
 {
-	min-height: 100%;
+	margin: 0;
+}
+
+.footer{
+	background-color: black;
+	padding: 6pt;
+	padding-left: 15pt;
+	padding-right: 15pt;
+	margin-top: 10pt;
+}
+
+.body
+{
+	padding-top: 0;
+	padding-bottom: 0;
+	height: 100%;
+}
+
+hr
+{
+	border: 0;
+	border-bottom: 1pt solid black;
+	margin: 15pt;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .questionimg
 {
+	margin: 15pt;
 	border: 1pt solid black;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 body
