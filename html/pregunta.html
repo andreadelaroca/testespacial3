@@ -1,32 +1,52 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="es">
 <head>
+	<title>Test en progreso</title>
 	<link href="style.css" rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
 </head>
 <body>
 	<div class="corpus">
-		<div class="header">
-		<h2>Test en progreso</h2>
-		</div>
-		<div class="body">
-		<img class="questionimg" alt="Imagen de la pregunta" src="res/adan.jpg">
-		<h3>¿Cuántas figuras ve aquí?</h3>
-		<form id="respuestas" name="respuestas">
-		  <input type="radio" id="answer_a" name="answers">
-		  <label for="fname">Respuesta A</label><br>
-		  
-		  <input type="radio" id="answer_b" name="answers">
-		  <label for="fname">Respuesta B</label><br>
-		  
-		  <input type="radio" id="answer_c" name="answers">
-		  <label for="fname">Respuesta C</label>
-		</form>
-		</div>
-		<div class="footer">
-		<button id="previous">Anterior</button>
-		<button id="next">Siguiente</button>
-		</div>
+		<header class="header">
+			<h2>Test en progreso</h2>
+		</header>
+		<main class="body">
+			<h3 id="question-number">Figura <span id="numeropregunta">1</span></h3>
+			<img class="questionimg" alt="Imagen de la pregunta" src="res/adan.jpg">
+			<h3>¿Cuántas figuras ve aquí?</h3>
+			<form id="respuestas" name="respuestas">
+					<input type="radio" id="answer_a" name="answers" value="a">
+					<label for="answer_a">Respuesta A</label><br>
+						
+					<input type="radio" id="answer_b" name="answers" value="b">
+					<label for="answer_b">Respuesta B</label><br>
+						
+					<input type="radio" id="answer_c" name="answers" value="c">
+					<label for="answer_c">Respuesta C</label>
+			</form>
+		</main>
+		<footer class="footer">
+			<button id="previous" type="button">Anterior</button>
+			<button id="next" type="button">Siguiente</button>
+		</footer>
 	</div>
+
+	<script>
+		document.getElementById('previous').addEventListener('click', function () {
+			// TODO: save current answer (if any) and load the previous question
+			console.log('Ir a la pregunta anterior');
+		});
+
+		document.getElementById('next').addEventListener('click', function () {
+			const selected = document.querySelector('input[name="answers"]:checked');
+			if (!selected) {
+				alert('Por favor seleccione una respuesta antes de continuar.');
+				return;
+			}
+			// TODO: save selected.value and load the next question
+			console.log('Respuesta seleccionada:', selected.value);
+		});
+	</script>
 </body>
 </html>

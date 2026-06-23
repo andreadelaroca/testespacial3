@@ -1,28 +1,259 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="es">
 <head>
+	<title>Test espacial #3</title>
 	<link href="style.css" rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<style>
+		/* .corpus sets display:flex, which otherwise beats the browser's
+		   default [hidden] { display: none } rule. This restores it. */
+		.corpus[hidden] { display: none; }
+	</style>
 </head>
 <body>
-	<div class="corpus">
-		<div class="header">
-		<h2>Test espacial #3</h2>
-		</div>
-		<div class="body">
-		<h3>Lea detenidamente las instrucciones antes de continuar</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-		<h3>Una vez terminado, ingrese su nombre y oprima el botón "iniciar"</h3>
-		<form>
-		  <label for="fname">Nombres</label>
-		  <input type="text" id="fname" name="fname"><br>
-		  <label for="lname">Apellidos</label>
-		  <input type="text" id="lname" name="lname">
-		</form>
-		</div>
-		<div class="footer">
-		<button id="start">Comenzar test</button>
-		</div>
+
+	<!-- ===================== PANTALLA 1: INICIO ===================== -->
+	<div class="corpus" id="screen-start">
+		<header class="header">
+			<h2>Test espacial #3</h2>
+		</header>
+		<main class="body">
+			<h3>Lea detenidamente las instrucciones antes de continuar</h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<h3>Una vez terminado, ingrese su nombre y oprima el botón "iniciar"</h3>
+			<form id="start-form">
+				<div class="field">
+					<label for="fname">Nombres</label>
+					<input type="text" id="fname" name="fname" required autofocus>
+				</div>
+				<div class="field">
+					<label for="lname">Apellidos</label>
+					<input type="text" id="lname" name="lname" required>
+				</div>
+			</form>
+		</main>
+		<footer class="footer">
+			<button id="start" type="submit" form="start-form">Comenzar test</button>
+		</footer>
 	</div>
+
+	<!-- ===================== PANTALLA 2: PREGUNTA ===================== -->
+	<div class="corpus" id="screen-question" hidden>
+		<header class="header">
+			<h2>Test en progreso</h2>
+		</header>
+		<main class="body">
+			<h3>Figura <span id="numeropregunta">—</span> de <span id="totalpreguntas">—</span></h3>
+			<img class="questionimg" id="question-img" alt="Imagen de la pregunta" src="">
+			<h3 id="question-text">¿Cuántas figuras ve aquí?</h3>
+			<form id="respuestas" name="respuestas">
+				<div id="answers-fieldset">
+					<!-- Las opciones de respuesta se generan dinámicamente en JS -->
+				</div>
+			</form>
+		</main>
+		<footer class="footer">
+			<button id="previous" type="button">Anterior</button>
+			<button id="next" type="button">Siguiente</button>
+		</footer>
+	</div>
+
+	<!-- ===================== PANTALLA 3: FINALIZADO ===================== -->
+	<div class="corpus" id="screen-finish" hidden>
+		<header class="header">
+			<h2>Finalizado</h2>
+		</header>
+		<main class="body">
+			<p>Enhorabuena, ha finalizado el test. Para enviar sus respuestas, oprima el botón debajo.</p>
+			<p id="send-status" role="status"></p>
+		</main>
+		<footer class="footer">
+			<button id="send" type="button">Finalizar</button>
+		</footer>
+	</div>
+
+	<script>
+	(function () {
+		'use strict';
+
+		// ----------------------------------------------------------------
+		// CONFIG — adjust these to match your real backend
+		// ----------------------------------------------------------------
+		const API_BASE = '/api/test'; // e.g. https://yourhost.com/api/test
+
+		// ----------------------------------------------------------------
+		// STATE
+		// ----------------------------------------------------------------
+		const state = {
+			sessionId: null,      // returned by backend when test starts
+			participant: { fname: '', lname: '' },
+			questions: [],        // loaded from backend, e.g. [{id, text, img, options:[{id,label}]}]
+			currentIndex: 0,
+			answers: {}           // { [questionId]: optionId }
+		};
+
+		// ----------------------------------------------------------------
+		// SCREEN HELPERS
+		// ----------------------------------------------------------------
+		const screens = {
+			start: document.getElementById('screen-start'),
+			question: document.getElementById('screen-question'),
+			finish: document.getElementById('screen-finish')
+		};
+
+		function showScreen(name) {
+			Object.values(screens).forEach(el => el.hidden = true);
+			screens[name].hidden = false;
+		}
+
+		// ----------------------------------------------------------------
+		// API CALLS — replace URLs/payloads to match your real endpoints
+		// ----------------------------------------------------------------
+		async function startTest(participant) {
+			const res = await fetch(`${API_BASE}/start`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ participant })
+			});
+			if (!res.ok) throw new Error('No se pudo iniciar el test');
+			return res.json(); // expected: { sessionId, questions: [...] }
+		}
+
+		async function submitAnswers(sessionId, answers) {
+			const res = await fetch(`${API_BASE}/${sessionId}/submit`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ answers })
+			});
+			if (!res.ok) throw new Error('No se pudieron enviar las respuestas');
+			return res.json();
+		}
+
+		// ----------------------------------------------------------------
+		// RENDER QUESTION
+		// ----------------------------------------------------------------
+		function renderQuestion() {
+			const q = state.questions[state.currentIndex];
+			if (!q) return;
+
+			document.getElementById('numeropregunta').textContent = state.currentIndex + 1;
+			document.getElementById('totalpreguntas').textContent = state.questions.length;
+			document.getElementById('question-text').textContent = q.text;
+			document.getElementById('question-img').src = q.img;
+
+			const optionsContainer = document.getElementById('answers-fieldset');
+			optionsContainer.innerHTML = '';
+
+			q.options.forEach(opt => {
+				const wrapper = document.createElement('div');
+				wrapper.className = 'field';
+
+				const input = document.createElement('input');
+				input.type = 'radio';
+				input.name = 'answers';
+				input.id = opt.id;
+				input.value = opt.id;
+				if (state.answers[q.id] === opt.id) input.checked = true;
+
+				const label = document.createElement('label');
+				label.setAttribute('for', opt.id);
+				label.textContent = opt.label;
+
+				wrapper.appendChild(input);
+				wrapper.appendChild(label);
+				wrapper.appendChild(document.createElement('br'));
+				optionsContainer.appendChild(wrapper);
+			});
+
+			document.getElementById('previous').disabled = state.currentIndex === 0;
+			document.getElementById('next').textContent =
+				state.currentIndex === state.questions.length - 1 ? 'Finalizar pruebas' : 'Siguiente';
+		}
+
+		function saveCurrentAnswer() {
+			const q = state.questions[state.currentIndex];
+			const selected = document.querySelector('input[name="answers"]:checked');
+			if (selected) {
+				state.answers[q.id] = selected.value;
+			}
+		}
+
+		// ----------------------------------------------------------------
+		// EVENT HANDLERS
+		// ----------------------------------------------------------------
+		document.getElementById('start-form').addEventListener('submit', async function (event) {
+			event.preventDefault();
+
+			state.participant.fname = document.getElementById('fname').value.trim();
+			state.participant.lname = document.getElementById('lname').value.trim();
+
+			const startBtn = document.getElementById('start');
+			startBtn.disabled = true;
+			startBtn.textContent = 'Cargando...';
+
+			try {
+				const data = await startTest(state.participant);
+				state.sessionId = data.sessionId;
+				state.questions = data.questions;
+				state.currentIndex = 0;
+
+				if (!state.questions.length) {
+					alert('No hay preguntas disponibles en este momento.');
+					return;
+				}
+
+				renderQuestion();
+				showScreen('question');
+			} catch (err) {
+				alert(err.message || 'Ocurrió un error al iniciar el test.');
+			} finally {
+				startBtn.disabled = false;
+				startBtn.textContent = 'Comenzar test';
+			}
+		});
+
+		document.getElementById('previous').addEventListener('click', function () {
+			saveCurrentAnswer();
+			if (state.currentIndex > 0) {
+				state.currentIndex -= 1;
+				renderQuestion();
+			}
+		});
+
+		document.getElementById('next').addEventListener('click', function () {
+			const selected = document.querySelector('input[name="answers"]:checked');
+			if (!selected) {
+				alert('Por favor seleccione una respuesta antes de continuar.');
+				return;
+			}
+			saveCurrentAnswer();
+
+			if (state.currentIndex < state.questions.length - 1) {
+				state.currentIndex += 1;
+				renderQuestion();
+			} else {
+				showScreen('finish');
+			}
+		});
+
+		document.getElementById('send').addEventListener('click', async function () {
+			const sendBtn = document.getElementById('send');
+			const status = document.getElementById('send-status');
+
+			sendBtn.disabled = true;
+			status.textContent = 'Enviando respuestas...';
+
+			try {
+				await submitAnswers(state.sessionId, state.answers);
+				status.textContent = 'Sus respuestas fueron enviadas correctamente. ¡Gracias!';
+			} catch (err) {
+				status.textContent = err.message || 'Ocurrió un error al enviar sus respuestas.';
+				sendBtn.disabled = false;
+			}
+		});
+
+	})();
+	</script>
 </body>
 </html>
