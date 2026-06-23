@@ -31,6 +31,7 @@ h2
 	padding-left: 15pt;
 	padding-right: 15pt;
 	margin-top: 10pt;
+	text-align: right;
 }
 
 .body
@@ -38,6 +39,8 @@ h2
 	padding-top: 0;
 	padding-bottom: 0;
 	height: 100%;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 hr
