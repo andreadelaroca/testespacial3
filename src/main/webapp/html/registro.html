@@ -95,8 +95,8 @@
                         required>
 
                     <option value="">Seleccione</option>
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
+                    <option value="F">F</option>
+                    <option value="M">M</option>
 
                 </select>
             </div>
@@ -123,7 +123,7 @@
                     <option value="Secundaria">Secundaria</option>
                     <option value="Tecnico">Técnico</option>
                     <option value="Universitario">Universitario</option>
-                    <option value="Postgrado">Postgrado</option>
+                    <option value="Postgrado">Posgrado</option>
 
                 </select>
             </div>
@@ -152,17 +152,6 @@
                         required>
             </div>
 
-            <div class="terminos">
-                <input
-                        type="checkbox"
-                        id="acepta"
-                        required>
-
-                <label for="acepta">
-                    Acepto los términos y condiciones.
-                </label>
-            </div>
-
             <div class="boton-container">
 
                 <button
@@ -189,11 +178,22 @@
             const confirmPassword =
                 document.getElementById("confirmPassword").value;
 
+            const sexo =
+                document.getElementById("sexo").value;
+
             if(password !== confirmPassword){
 
                 e.preventDefault();
 
                 alert("Las contraseñas no coinciden");
+                return;
+            }
+
+            if(sexo !== "F" && sexo !== "M"){
+
+                e.preventDefault();
+
+                alert("El sexo solo puede ser F o M");
             }
 
         });
@@ -201,7 +201,7 @@
     </script>
 
 </div>
-
+<script src="js/registro.js"></script>
 </body>
 
 </html>

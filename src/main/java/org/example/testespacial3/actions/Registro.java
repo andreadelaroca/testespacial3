@@ -1,23 +1,18 @@
 package org.example.testespacial3.actions;
 
-import org.example.testespacial3.modelo.Usuario;
-
+import org.example.testespacial3.modelo.Sujeto;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-
 import java.io.IOException;
 import java.time.LocalDate;
 
-@WebServlet("/registro")
 public class Registro extends HttpServlet {
 
-    private static final EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory("default");
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
 
     @Override
     protected void doPost(
@@ -25,61 +20,83 @@ public class Registro extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
         EntityManager em = emf.createEntityManager();
 
         try {
+            String username = trim(request.getParameter("username"));
+            String password = trim(request.getParameter("password"));
+            String fechaNac = trim(request.getParameter("fechaNac"));
+            String sexo = normalizeSexo(request.getParameter("sexo"));
 
-            Usuario usuario = new Usuario();
+            if (isBlank(trim(request.getParameter("nombres"))) ||
+                    isBlank(trim(request.getParameter("apellidos"))) ||
+                    isBlank(trim(request.getParameter("email"))) ||
+                    isBlank(username) ||
+                    isBlank(password) ||
+                    isBlank(fechaNac) ||
+                    isBlank(trim(request.getParameter("profesion"))) ||
+                    isBlank(trim(request.getParameter("estudios")))) {
+                response.sendRedirect("/testespacial3/html/registro.html?error=campos");
+                return;
+            }
 
-            usuario.setNombres(
-                    request.getParameter("nombres"));
+            if (!"F".equals(sexo) && !"M".equals(sexo)) {
+                response.sendRedirect("/testespacial3/html/registro.html?error=sexo");
+                return;
+            }
 
-            usuario.setApellidos(
-                    request.getParameter("apellidos"));
+            TypedQuery<Long> existingUserQuery = em.createQuery(
+                    "SELECT COUNT(u) FROM Usuario u WHERE LOWER(u.username) = LOWER(:username)",
+                    Long.class
+            );
+            existingUserQuery.setParameter("username", username);
 
-            usuario.setEmail(
-                    request.getParameter("email"));
+            if (existingUserQuery.getSingleResult() > 0) {
+                response.sendRedirect("/testespacial3/html/registro.html?error=usuario");
+                return;
+            }
 
-            usuario.setUsername(
-                    request.getParameter("username"));
-
-            usuario.setPassword(
-                    request.getParameter("password"));
-
-            usuario.setFechaNac(
-                    LocalDate.parse(
-                            request.getParameter("fechaNac")));
-
-            usuario.setSexo(
-                    request.getParameter("sexo"));
-
-            usuario.setProfesion(
-                    request.getParameter("profesion"));
-
-            usuario.setEstudios(
-                    request.getParameter("estudios"));
+            Sujeto sujeto = new Sujeto();
+            sujeto.setNombres(trim(request.getParameter("nombres")));
+            sujeto.setApellidos(trim(request.getParameter("apellidos")));
+            sujeto.setEmail(trim(request.getParameter("email")));
+            sujeto.setUsername(username);
+            sujeto.setPassword(password);
+            sujeto.setFechaNac(LocalDate.parse(fechaNac));
+            sujeto.setSexo(sexo);
+            sujeto.setProfesion(trim(request.getParameter("profesion")));
+            sujeto.setEstudios(trim(request.getParameter("estudios")));
 
             em.getTransaction().begin();
-
-            em.persist(usuario);
-
+            em.persist(sujeto);
             em.getTransaction().commit();
 
-            response.sendRedirect("index.html");
+            response.sendRedirect("/testespacial3/html/login.html?registro=ok");
 
         } catch (Exception e) {
-
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-
             e.printStackTrace();
-
-            response.sendRedirect("registro.html");
-
+            response.sendRedirect("/testespacial3/html/registro.html?error=server");
         } finally {
-
-            em.close();
+            if (em.isOpen()) {
+                em.close();
+            }
         }
+    }
+
+    private String trim(String value) {
+        return value == null ? null : value.trim();
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    private String normalizeSexo(String value) {
+        if (value == null) return null;
+        return value.trim().toUpperCase();
     }
 }

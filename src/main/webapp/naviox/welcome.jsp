@@ -1,7 +1,5 @@
 <%Servlets.setCharacterEncoding(request, response);%>
 
-<%-- Página de bienvenida. Siéntete libre de modificarla a tu gusto --%>
-
 <%@include file="../xava/imports.jsp"%>
 
 <%@page import="org.openxava.web.servlets.Servlets"%>
@@ -11,15 +9,6 @@
 <%@page import="org.openxava.web.style.XavaStyle"%>
 <%@page import="org.openxava.util.XavaPreferences"%>
 <%@page import="org.openxava.web.Browsers"%> 
-
-<%-- Para poner tu propio texto añade entradas a los archivos de mensajes i18n de tu proyecto 
-En testespacial3-labels_es.properties:
-testespacial3=Tu aplicación
-testespacial3[description]=Tu aplicación hace esto y lo otro
-
-En testespacial3-messages_en.properties:
-welcome_point1=Esto una línea de explicación adicional
---%>
 
 <%
 MetaApplication metaApplication = MetaApplications.getMainMetaApplication(); 
@@ -46,9 +35,8 @@ if (title == null) title = metaApplication.getLabel();
 
 <div class="ox-bottom-buttons">
 	<input type="hidden">
-	<a href="m/SignIn">
-	<input type="button" tabindex="1" value="<xava:label key='SignIn'/>">
+	<a href="html/login.html">
+	<input type="button" tabindex="1" value="<xava:label key='html/res/registro.html'/>">
 	</a>
 </div>
-
 </body>

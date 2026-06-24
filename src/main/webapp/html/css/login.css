@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #083c57;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.shell {
+    width: 850px;
+    max-width: 100%;
+    background: #edf2f5;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    min-height: 500px;
+}
+
+.hero {
+    width: 45%;
+    background: #083c57;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.hero h1 {
+    font-size: 28px;
+    line-height: 1.4;
+}
+
+.panel {
+    width: 55%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.panel h2 {
+    color: #006b94;
+    font-size: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.entry {
+    background: #d8edf5;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #59bfe6;
+}
+
+.entry h3 {
+    color: #083c57;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.entry p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.actions {
+    text-align: right;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 14px;
+    transition: .3s;
+}
+
+.button.primary {
+    background: #0097d1;
+    color: white;
+}
+
+.button.primary:hover {
+    background: #007aa8;
+    transform: translateY(-1px);
+}
+
+.button.secondary {
+    background: #083c57;
+    color: white;
+}
+
+.button.secondary:hover {
+    background: #05273a;
+    transform: translateY(-1px);
+}
+
+@media(max-width: 768px) {
+    .shell {
+        flex-direction: column;
+    }
+    .hero, .panel {
+        width: 100%;
+    }
+    .hero {
+        padding: 30px;
+    }
+}
