@@ -19,6 +19,15 @@
     <servlet-name>jsp</servlet-name>
     <url-pattern>*.jsp</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>RegistroSujetoServlet</servlet-name>
+    <servlet-class>org.example.testespacial3.web.RegistroSujetoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegistroSujetoServlet</servlet-name>
+    <url-pattern>/api/registro-sujeto</url-pattern>
+  </servlet-mapping>
   
   <!-- Para cumplir con OWASP -->
   <error-page>

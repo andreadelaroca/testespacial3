@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const estudios = String(formData.get('estudios') || '').trim();
         const password = String(formData.get('password') || '').trim();
         const confirmPassword = String(formData.get('confirmPassword') || '').trim();
-        const acepta = formData.has('acepta');
+        const sexoNormalizado = sexo.toUpperCase();
 
         if (!nombres || !apellidos || !email || !username || !fechaNac || !sexo || !profesion || !estudios || !password) {
             setMessage('Completa todos los campos obligatorios.', true);
@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (!acepta) {
-            setMessage('Debes aceptar los términos y condiciones.', true);
+        if (sexoNormalizado !== 'F' && sexoNormalizado !== 'M') {
+            setMessage('El sexo solo puede ser F o M.', true);
             return;
         }
 
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             email,
             username,
             fechaNac,
-            sexo,
+            sexo: sexoNormalizado,
             profesion,
             estudios,
             password

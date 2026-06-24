@@ -30,9 +30,15 @@ public class RegistroSujetoServlet extends HttpServlet {
         String profesion = trim(request.getParameter("profesion"));
         String estudios = trim(request.getParameter("estudios"));
         String password = trim(request.getParameter("password"));
+        String sexoNormalizado = sexo == null ? null : sexo.toUpperCase();
 
         if (isBlank(nombres) || isBlank(apellidos) || isBlank(email) || isBlank(username) || isBlank(fechaNac) || isBlank(sexo) || isBlank(profesion) || isBlank(estudios) || isBlank(password)) {
             writeJson(response, false, "Todos los campos obligatorios son requeridos.");
+            return;
+        }
+
+        if (!"F".equals(sexoNormalizado) && !"M".equals(sexoNormalizado)) {
+            writeJson(response, false, "El sexo solo puede ser F o M.");
             return;
         }
 
@@ -58,7 +64,7 @@ public class RegistroSujetoServlet extends HttpServlet {
             sujeto.setEmail(email);
             sujeto.setUsername(username);
             sujeto.setFechaNac(LocalDate.parse(fechaNac));
-            sujeto.setSexo(sexo);
+            sujeto.setSexo(sexoNormalizado);
             sujeto.setProfesion(profesion);
             sujeto.setEstudios(estudios);
             sujeto.setPassword(password);
@@ -72,7 +78,7 @@ public class RegistroSujetoServlet extends HttpServlet {
             if (em != null && em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            writeJson(response, false, "No se pudo guardar el registro.");
+            writeJson(response, false, "No se pudo guardar el registro: " + exception.getMessage());
         }
     }
 
