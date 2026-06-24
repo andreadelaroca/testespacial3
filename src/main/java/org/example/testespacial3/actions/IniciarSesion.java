@@ -14,7 +14,7 @@ public class IniciarSesion extends ViewBaseAction implements IForwardAction {
         try {
             EntityManager em = XPersistence.getManager();
 
-            Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.username = :username AND u.password = :password");
+            Query query = em.createQuery("SELECT u FROM usuario u WHERE u.username = :username AND u.password = :password");
             query.setParameter("username", username);
             query.setParameter("password", password);
 

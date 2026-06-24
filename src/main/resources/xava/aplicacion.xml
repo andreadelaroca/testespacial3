@@ -10,6 +10,7 @@
 
 	<modulo nombre="RegistroSujeto">
 		<modelo nombre="Sujeto"/>
+		<vista nombre="Registro"/>
 		<controlador nombre="RegistroSujetoController"/>
 		<controlador-modo nombre="Detail"/>
 	</modulo>

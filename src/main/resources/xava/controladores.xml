@@ -8,8 +8,9 @@
     </controlador>
 
     <controlador nombre="RegistroSujetoController">
-        <accion nombre="save" clase="org.openxava.actions.SaveAction" imagen="save.gif" atajo-de-teclado="F2"/>
-        <accion nombre="new" clase="org.openxava.actions.NewAction" imagen="new.gif" atajo-de-teclado="F3"/>
+        <accion nombre="save" clase="org.example.testespacial3.actions.GrabarYRedirigirRegistro" imagen="save.gif"/>
+        <accion nombre="new" clase="org.openxava.actions.NewAction" imagen="new.gif"/>
     </controlador>
+
     
 </controladores>
