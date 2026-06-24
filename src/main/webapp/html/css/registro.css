@@ -1,0 +1,312 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:#083c57;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+.registro-container{
+
+    width:1000px;
+    max-width:100%;
+
+    min-height:650px;
+
+    background:#edf2f5;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+/* ==========================
+   PANEL IZQUIERDO
+========================== */
+
+.panel-info{
+
+    width:40%;
+
+    background:#083c57;
+
+    color:white;
+
+    position:relative;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:40px;
+
+    overflow:hidden;
+}
+
+.panel-info h1{
+
+    font-size:38px;
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    z-index:2;
+}
+
+.panel-info p{
+
+    text-align:center;
+
+    line-height:1.8;
+
+    z-index:2;
+}
+
+/* ==========================
+   DECORACIONES
+========================== */
+
+.circulo{
+
+    position:absolute;
+
+    width:250px;
+    height:250px;
+
+    border-radius:50%;
+
+    background:#59bfe6;
+
+    opacity:.15;
+
+    bottom:-80px;
+    left:-80px;
+}
+
+.cuadro{
+
+    position:absolute;
+
+    width:140px;
+    height:140px;
+
+    border:5px solid #59bfe6;
+
+    opacity:.25;
+
+    top:80px;
+    right:-40px;
+}
+
+.cuadro2{
+
+    position:absolute;
+
+    width:70px;
+    height:70px;
+
+    background:#0097d1;
+
+    opacity:.2;
+
+    top:40px;
+    left:40px;
+
+    border-radius:15px;
+}
+
+/* ==========================
+   PANEL DERECHO
+========================== */
+
+.panel-formulario{
+
+    width:60%;
+
+    padding:50px;
+}
+
+.panel-formulario h2{
+
+    text-align:center;
+
+    color:#006b94;
+
+    font-size:34px;
+
+    margin-bottom:35px;
+}
+
+/* ==========================
+   GRID DEL FORMULARIO
+========================== */
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:18px;
+}
+
+/* ==========================
+   CAMPOS
+========================== */
+
+.campo{
+
+    display:flex;
+    flex-direction:column;
+}
+
+.campo label{
+
+    margin-bottom:6px;
+
+    color:#555;
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+.campo input,
+.campo select{
+
+    width:100%;
+
+    padding:13px;
+
+    border-radius:8px;
+
+    border:2px solid #59bfe6;
+
+    background:#d8edf5;
+
+    font-size:14px;
+
+    transition:.3s;
+}
+
+.campo input:focus,
+.campo select:focus{
+
+    outline:none;
+
+    background:white;
+
+    border-color:#0097d1;
+}
+
+.campo input::placeholder{
+
+    color:#4f88a3;
+}
+
+
+.full-width{
+
+    grid-column:1 / span 2;
+}
+
+.terminos{
+
+    grid-column:1 / span 2;
+
+    margin-top:10px;
+
+    color:#555;
+
+    font-size:14px;
+}
+
+.terminos input{
+
+    margin-right:8px;
+}
+
+.boton-container{
+
+    grid-column:1 / span 2;
+
+    text-align:center;
+
+    margin-top:20px;
+}
+
+.btn-registro{
+
+    background:#0097d1;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 40px;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.btn-registro:hover{
+
+    background:#007aa8;
+
+    transform:translateY(-2px);
+}
+
+@media(max-width:900px){
+
+    .registro-container{
+
+        flex-direction:column;
+    }
+
+    .panel-info,
+    .panel-formulario{
+
+        width:100%;
+    }
+
+    .panel-info{
+
+        min-height:250px;
+    }
+
+    .form-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .full-width,
+    .terminos,
+    .boton-container{
+
+        grid-column:auto;
+    }
+}
