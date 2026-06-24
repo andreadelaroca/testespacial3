@@ -1,35 +1,47 @@
 package org.example.testespacial3.actions;
 
+import org.example.testespacial3.modelo.*;
 import org.openxava.actions.*;
 import org.openxava.jpa.*;
 import javax.persistence.*;
 
 public class IniciarSesion extends ViewBaseAction implements IForwardAction {
+
     private String forwardURI;
 
     public void execute() throws Exception {
-        String username = getView().getValueString("usuario");
-        String password = getView().getValueString("contrasena");
+        String username = getView().getValueString("username");
+        if (username == null || username.isBlank()) {
+            username = getView().getValueString("usuario");
+        }
+
+        if (username == null || username.isBlank()) {
+            this.forwardURI = "/html/registro.html";
+            return;
+        }
 
         try {
             EntityManager em = XPersistence.getManager();
 
-            Query query = em.createQuery("SELECT u FROM usuario u WHERE u.username = :username AND u.password = :password");
+            TypedQuery<Usuario> query = em.createQuery(
+                "SELECT u FROM Usuario u WHERE u.username = :username",
+                Usuario.class
+            );
             query.setParameter("username", username);
-            query.setParameter("password", password);
 
-            Object usuarioLogueado = query.getSingleResult();
+            Usuario usuarioLogueado = query.getSingleResult();
 
             getRequest().getSession().setAttribute("xava.user", username);
 
-            if (usuarioLogueado.getClass().getSimpleName().contains("Sujeto")) {
-                this.forwardURI = "/html/res/index.html";
+            if (usuarioLogueado instanceof Sujeto) {
+
+                this.forwardURI = "/html/index.html";
             } else {
-                this.forwardURI = "/m/Test";
+                this.forwardURI = "/m/RegistroSujeto";
             }
 
         } catch (NoResultException e) {
-            addError("usuario_o_password_incorrecto");
+            this.forwardURI = "/html/registro.html";
         }
     }
 
