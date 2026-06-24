@@ -11,7 +11,7 @@ public class GrabarYRedirigirRegistro extends SaveAction implements IForwardActi
 
         if (getErrors().isEmpty()) {
             addMessage("Registro completado con �xito. Por favor, inicia sesi�n.");
-            this.forwardURI = "/html/index.html";
+            this.forwardURI = "/html/login.html";
         }
     }
 
