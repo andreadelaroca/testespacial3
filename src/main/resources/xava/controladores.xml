@@ -3,10 +3,6 @@
 <!DOCTYPE controladores SYSTEM "dtds/controladores.dtd">
 <controladores>
 
-    <controlador nombre="SignIn">
-        <accion nombre="signIn" clase="org.example.testespacial3.actions.IniciarSesion" />
-    </controlador>
-
     <controlador nombre="RegistroSujetoController">
         <accion nombre="save" clase="org.example.testespacial3.actions.GrabarYRedirigirRegistro" imagen="save.gif"/>
         <accion nombre="new" clase="org.openxava.actions.NewAction" imagen="new.gif"/>

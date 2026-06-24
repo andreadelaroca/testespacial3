@@ -3,43 +3,68 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
+                    <a class="btn-registro" href="/testespacial3/naviox/adminSignIn.jsp">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso - Test de Inteligencia Espacial</title>
-    <link rel="stylesheet" href="/testespacial3/html/css/login.css">
+
+    <base href="/testespacial3/html/">
+
+    <link rel="stylesheet" href="css/registro.css">
 </head>
 
 <body>
 
-<main class="shell">
-    <section class="hero">
-        <div>
-            <h1>Test de Inteligencia Espacial #3: Cubos-Ladrillos</h1>
-        </div>
-    </section>
+<div class="registro-container">
 
-    <section class="panel">
-        <div>
-            <h2>Acceda al Sistema</h2>
-        </div>
+    <div class="panel-info">
 
-        <div class="entry">
-            <h3>Entrar como administrador</h3>
-            <p>Accede al entorno OpenXava con las funciones de administración.</p>
-            <div class="actions">
-                <a class="button primary" href="/testespacial3/m/SignIn">Ir a OpenXava</a>
+        <div class="circulo"></div>
+        <div class="cuadro"></div>
+        <div class="cuadro2"></div>
+
+        <h1>TEST DE INTELIGENCIA ESPACIAL</h1>
+
+        <p>
+            Acceso público para sujetos y acceso administrativo para OpenXava.
+        </p>
+
+    </div>
+
+    <div class="panel-formulario">
+
+        <h2>ACCESO</h2>
+
+        <div class="form-grid">
+
+            <div class="campo full-width">
+                <label>Entrar como administrador</label>
+                <p>
+                    Abre el módulo nativo de OpenXava. Allí el usuario administrador puede entrar con sus credenciales por defecto.
+                </p>
+                <div class="boton-container">
+                    <button type="button" class="btn-registro" onclick="location.href='../m/SignIn'">
+                        Ir a OpenXava
+                    </button>
+                </div>
             </div>
+
+            <div class="campo full-width">
+                <label>Registrarme como sujeto</label>
+                <p>
+                    Si todavía no tienes cuenta, abre el formulario de registro para crearla.
+                </p>
+                <div class="boton-container">
+                    <button type="button" class="btn-registro" onclick="location.href='registro.html'">
+                        Abrir registro
+                    </button>
+                </div>
+            </div>
+
         </div>
 
-        <div class="entry">
-            <h3>Registrarme como paciente</h3>
-            <p>Si no tienes cuenta, abre el formulario de registro para crearla.</p>
-            <div class="actions">
-                <a class="button secondary" href="/testespacial3/html/registro.html">Abrir registro</a>
-            </div>
-        </div>
-    </section>
-</main>
+    </div>
+
+</div>
 
 </body>
 

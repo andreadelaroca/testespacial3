@@ -34,10 +34,6 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
 
-/* ==========================
-   PANEL IZQUIERDO
-========================== */
-
 .panel-info{
 
     width:40%;
@@ -78,10 +74,6 @@ body{
 
     z-index:2;
 }
-
-/* ==========================
-   DECORACIONES
-========================== */
 
 .circulo{
 
@@ -132,9 +124,6 @@ body{
     border-radius:15px;
 }
 
-/* ==========================
-   PANEL DERECHO
-========================== */
 
 .panel-formulario{
 
@@ -154,10 +143,6 @@ body{
     margin-bottom:35px;
 }
 
-/* ==========================
-   GRID DEL FORMULARIO
-========================== */
-
 .form-grid{
 
     display:grid;
@@ -166,10 +151,6 @@ body{
 
     gap:18px;
 }
-
-/* ==========================
-   CAMPOS
-========================== */
 
 .campo{
 
@@ -253,6 +234,9 @@ body{
 }
 
 .btn-registro{
+
+    display:inline-block;
+    text-decoration:none;
 
     background:#0097d1;
 

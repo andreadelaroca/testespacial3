@@ -32,7 +32,9 @@
 
         <h2>REGISTRO</h2>
 
-        <form id="registroForm" class="form-grid">
+        <div id="registroMensaje" style="grid-column:1 / span 2; text-align:center; color:#006b94; font-weight:600;"></div>
+
+        <form id="registroForm" class="form-grid" novalidate>
 
             <div class="campo">
                 <label for="nombres">Nombres</label>
@@ -152,11 +154,8 @@
                 <input
                         type="checkbox"
                         id="acepta"
+                        name="acepta"
                         required>
-
-                <label for="acepta">
-                    Acepto los términos y condiciones.
-                </label>
             </div>
 
             <div class="boton-container">
@@ -178,5 +177,7 @@
 </div>
 
 </body>
+
+<script src="js/registro.js"></script>
 
 </html>

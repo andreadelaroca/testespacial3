@@ -8,6 +8,12 @@
 		<controlador nombre="Typical"/>		
 	</modulo-defecto>
 
+	<modulo nombre="Usuario">
+		<modelo nombre="Usuario"/>
+		<controlador nombre="Typical"/>
+		<controlador-modo nombre="Detail"/>
+	</modulo>
+
 	<modulo nombre="RegistroSujeto">
 		<modelo nombre="Sujeto"/>
 		<vista nombre="Registro"/>
