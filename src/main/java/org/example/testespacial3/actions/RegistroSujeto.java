@@ -3,6 +3,7 @@ package org.example.testespacial3.actions;
 import org.openxava.actions.*;
 import org.openxava.jpa.*;
 import javax.persistence.*;
+import org.openxava.view.View;
 
 public class RegistroSujeto extends ViewBaseAction {
     public void execute() throws Exception {
