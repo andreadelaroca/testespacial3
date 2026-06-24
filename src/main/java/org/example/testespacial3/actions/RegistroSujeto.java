@@ -4,14 +4,14 @@ import org.openxava.actions.*;
 import org.openxava.jpa.*;
 import javax.persistence.*;
 
-public class IniciarSesion extends ViewBaseAction {
+public class RegistroSujeto extends ViewBaseAction {
     public void execute() throws Exception {
         String username = getView().getValueString("usuario");
         String password = getView().getValueString("contrasena");
 
         try {
             EntityManager em = XPersistence.getManager();
-            Query query = em.createQuery("SELECT u FROM usuario u WHERE u.username = :username AND u.password = :password");
+            Query query = em.createQuery("SELECT u FROM sujeto u WHERE u.username = :username AND u.password = :password");
             query.setParameter("username", username);
             query.setParameter("password", password);
 
@@ -19,7 +19,7 @@ public class IniciarSesion extends ViewBaseAction {
 
             if (usuarioLogueado.getClass().getSimpleName().contains("Sujeto")) {
                 getRequest().getSession().setAttribute("xava.user", username);
-                String urlTest = getRequest().getContextPath() + "/html/res/index.html";
+                String urlTest = getRequest().getContextPath() + "/test-sujeto.html";
                 getView().setNextURL(urlTest);
 
             } else {
