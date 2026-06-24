@@ -4,10 +4,6 @@
 
 <web-app>
   <display-name>OpenXava Application</display-name>
-
-  <welcome-file-list>
-    <welcome-file>html/login.html</welcome-file>
-  </welcome-file-list>
   
   <!-- Evitar problema de bloqueo de archivos de IntelliJ en Windows -->
   <servlet>
