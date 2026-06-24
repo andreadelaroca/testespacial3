@@ -32,7 +32,11 @@
 
         <h2>REGISTRO</h2>
 
-        <form id="registroForm" class="form-grid">
+        <form
+                id="registroForm"
+                class="form-grid"
+                action="/testespacial3/registro"
+                method="post">
 
             <div class="campo">
                 <label for="nombres">Nombres</label>
@@ -174,6 +178,27 @@
         </form>
 
     </div>
+    <script>
+
+        document.getElementById("registroForm")
+        .addEventListener("submit", function(e){
+
+            const password =
+                document.getElementById("password").value;
+
+            const confirmPassword =
+                document.getElementById("confirmPassword").value;
+
+            if(password !== confirmPassword){
+
+                e.preventDefault();
+
+                alert("Las contraseñas no coinciden");
+            }
+
+        });
+
+    </script>
 
 </div>
 
