@@ -70,4 +70,9 @@ public class Usuario {
 
 	}
 
+	public void registrarSesion(){
+
+	}
+
+
 }
