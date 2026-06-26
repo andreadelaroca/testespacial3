@@ -11,104 +11,152 @@
 
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        html, body {
-            margin: 0;
-            padding: 0;
+        html {
+            background: #083c57;
             min-height: 100%;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #eef3f8;
-            color: #1f2937;
         }
 
         body {
-            padding: 24px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #083c57;
+            min-height: 100vh;
+            padding: 25px;
+            color: #1f2937;
         }
 
-        .test-container {
-            width: 100%;
-            max-width: 980px;
+        .page-wrapper {
+            width: 1100px;
+            max-width: 100%;
             margin: 0 auto;
-            background: #ffffff;
+            background: #edf2f5;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+            box-shadow: 0 10px 30px rgba(0,0,0,.35);
         }
 
         .test-header {
-            background: linear-gradient(135deg, #0f4c75, #1b6ca8);
+            background: #083c57;
             color: white;
-            padding: 28px 32px;
+            padding: 35px 45px;
             position: relative;
+            overflow: hidden;
+        }
+
+        .test-header::before {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            background: #59bfe6;
+            opacity: .15;
+            bottom: -90px;
+            left: -80px;
+        }
+
+        .test-header::after {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border: 5px solid #59bfe6;
+            opacity: .25;
+            top: 45px;
+            right: -40px;
         }
 
         .test-title {
-            margin: 0 0 10px;
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-        }
-
-        .subject-name {
-            font-size: 15px;
-            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            font-size: 36px;
+            text-transform: uppercase;
             margin-bottom: 18px;
         }
 
-        .instructions-box {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.20);
-            border-radius: 12px;
-            padding: 16px;
-            line-height: 1.55;
-            font-size: 14px;
+        .subject {
+            position: relative;
+            z-index: 2;
+            font-size: 16px;
+            margin-bottom: 18px;
         }
 
-        .timer-container {
-            position: sticky;
-            top: 10px;
-            z-index: 50;
-            margin: 22px 32px 0 auto;
-            width: fit-content;
-            background: #dc2626;
+        .subject strong {
+            color: #59bfe6;
+        }
+
+        .instructions {
+            position: relative;
+            z-index: 2;
+            background: rgba(255,255,255,.12);
+            border-left: 5px solid #59bfe6;
+            padding: 18px;
+            border-radius: 10px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .timer-box {
+            background: #0097d1;
             color: white;
-            padding: 11px 18px;
+            padding: 14px 25px;
             border-radius: 999px;
-            font-weight: 800;
-            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.25);
+            font-weight: bold;
+            width: fit-content;
+            margin: 25px auto 0;
+            box-shadow: 0 6px 15px rgba(0,0,0,.25);
+        }
+
+        .timer-box.danger {
+            background: #d9534f;
         }
 
         .content {
-            padding: 30px 32px 36px;
+            padding: 35px 45px 45px;
+        }
+
+        .alert {
+            background: #ffe5e5;
+            color: #d9534f;
+            border: 1px solid #d9534f;
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin: 25px 45px 0;
         }
 
         .pregunta-card {
-            background: #f8fafc;
-            border: 1px solid #dbe4ee;
+            background: white;
+            border: 2px solid #d8edf5;
             border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 26px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.08);
         }
 
         .question-heading {
             display: inline-block;
-            background: #dbeafe;
-            color: #1d4ed8;
-            padding: 8px 14px;
+            background: #d8edf5;
+            color: #006b94;
+            padding: 10px 18px;
             border-radius: 999px;
-            font-weight: 800;
-            margin-bottom: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
         .imagen-cubos {
-            width: 100%;
-            background: white;
-            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            border: 2px solid #59bfe6;
             border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 18px;
+            padding: 18px;
+            margin: 15px 0 22px;
             text-align: center;
         }
 
@@ -120,107 +168,99 @@
         }
 
         .options-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-            gap: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 15px;
         }
 
         .option-label {
-            display: flex;
+            min-width: 90px;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background: white;
-            border: 2px solid #dbe4ee;
-            border-radius: 12px;
-            padding: 13px 14px;
+            justify-content: center;
+            gap: 9px;
+            background: #d8edf5;
+            border: 2px solid #59bfe6;
+            border-radius: 10px;
+            padding: 13px 20px;
             cursor: pointer;
-            font-weight: 700;
-            transition: 0.2s ease;
+            font-weight: bold;
+            color: #083c57;
+            transition: .25s;
         }
 
         .option-label:hover {
-            border-color: #1b6ca8;
-            background: #eff6ff;
-            transform: translateY(-1px);
-        }
-
-        .option-label input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
+            background: white;
+            border-color: #0097d1;
+            transform: translateY(-2px);
         }
 
         .option-label.selected {
-            border-color: #1b6ca8;
-            background: #dbeafe;
-            color: #0f4c75;
+            background: #0097d1;
+            color: white;
+            border-color: #007aa8;
+        }
+
+        .option-label input {
+            transform: scale(1.2);
+            cursor: pointer;
         }
 
         .actions-bar {
-            margin-top: 28px;
+            margin-top: 35px;
         }
 
         .btn-submit {
             width: 100%;
             border: none;
-            border-radius: 14px;
-            background: #16a34a;
+            background: #0097d1;
             color: white;
-            font-size: 18px;
-            font-weight: 800;
             padding: 16px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.2s ease;
+            transition: .3s;
         }
 
         .btn-submit:hover {
-            background: #15803d;
-            transform: translateY(-1px);
-        }
-
-        .btn-submit:active {
-            transform: scale(0.99);
-        }
-
-        .alert {
-            margin: 24px 32px 0;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: 800;
-            text-align: center;
-        }
-
-        .alert-danger {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            background: #007aa8;
+            transform: translateY(-2px);
         }
 
         .empty-state {
             padding: 45px;
             text-align: center;
+            color: #d9534f;
+            font-weight: bold;
+            font-size: 18px;
         }
 
-        @media (max-width: 700px) {
+        @media(max-width: 768px) {
             body {
                 padding: 12px;
             }
 
             .test-header,
             .content {
-                padding: 22px 18px;
+                padding: 25px 20px;
             }
 
             .test-title {
-                font-size: 23px;
+                font-size: 26px;
             }
 
-            .timer-container {
-                margin: 16px 18px 0 auto;
+            .options-container {
+                flex-direction: column;
             }
 
-            .pregunta-card {
-                padding: 16px;
+            .option-label {
+                width: 100%;
+            }
+
+            .alert {
+                margin: 20px 20px 0;
             }
         }
     </style>
@@ -228,10 +268,10 @@
 
 <body>
 
-<div class="test-container">
+<div class="page-wrapper">
 
     <c:if test="${param.error == 'true'}">
-        <div class="alert alert-danger">
+        <div class="alert">
             Error al procesar el test. Contacte con el administrador.
         </div>
     </c:if>
@@ -239,12 +279,12 @@
     <c:choose>
         <c:when test="${not empty test}">
 
-            <div class="test-header">
+            <header class="test-header">
                 <h1 class="test-title">
                     <c:out value="${test.nombre}" default="Evaluación Psicométrica"/>
                 </h1>
 
-                <div class="subject-name">
+                <div class="subject">
                     Sujeto:
                     <strong>
                         <c:out value="${sujeto.nombres}"/> <c:out value="${sujeto.apellidos}"/>
@@ -252,24 +292,24 @@
                 </div>
 
                 <c:if test="${not empty test.instrucciones}">
-                    <div class="instructions-box">
+                    <div class="instructions">
                         <strong>Instrucciones:</strong><br>
                         <c:out value="${test.instrucciones}"/>
                     </div>
                 </c:if>
-            </div>
 
-            <div class="timer-container" id="timer-box">
-                Tiempo restante: <span id="reloj">--:--</span>
-            </div>
+                <div class="timer-box" id="timer-box">
+                    Tiempo restante: <span id="reloj">--:--</span>
+                </div>
+            </header>
 
-            <div class="content">
+            <main class="content">
                 <form id="formularioTest" action="${pageContext.request.contextPath}/guardarTest" method="POST">
                     <input type="hidden" name="testId" value="${test.id}">
                     <input type="hidden" name="tiempomaximo" value="${test.tiempoMax}">
 
                     <c:forEach var="pregunta" items="${test.preguntas}" varStatus="status">
-                        <div class="pregunta-card">
+                        <section class="pregunta-card">
                             <div class="question-heading">
                                 Pregunta ${status.index + 1}
                             </div>
@@ -290,7 +330,7 @@
                                     </label>
                                 </c:forEach>
                             </div>
-                        </div>
+                        </section>
                     </c:forEach>
 
                     <div class="actions-bar">
@@ -299,7 +339,7 @@
                         </button>
                     </div>
                 </form>
-            </div>
+            </main>
 
             <script>
                 const state = {
@@ -308,30 +348,41 @@
                     tiempoRestante: 0
                 };
 
-                const elements = {
-                    timer: document.getElementById("reloj"),
-                    timerBox: document.getElementById("timer-box"),
-                    form: document.getElementById("formularioTest"),
-                    finishBtn: document.getElementById("finish-button")
-                };
+                const reloj = document.getElementById("reloj");
+                const timerBox = document.getElementById("timer-box");
+                const form = document.getElementById("formularioTest");
+                const finishBtn = document.getElementById("finish-button");
 
-                document.addEventListener("DOMContentLoaded", init);
-
-                function init() {
+                document.addEventListener("DOMContentLoaded", function () {
                     iniciarSeleccionVisual();
                     iniciarTemporizador();
 
-                    if (elements.form) {
-                        elements.form.addEventListener("submit", handleSubmit);
+                    if (form) {
+                        form.addEventListener("submit", function (event) {
+                            if (state.locked) {
+                                event.preventDefault();
+                                return;
+                            }
+
+                            state.locked = true;
+
+                            if (state.timerId) {
+                                clearInterval(state.timerId);
+                            }
+
+                            if (finishBtn) {
+                                finishBtn.textContent = "Guardando respuestas...";
+                            }
+                        });
                     }
-                }
+                });
 
                 function iniciarSeleccionVisual() {
-                    document.querySelectorAll(".option-label input").forEach(input => {
-                        input.addEventListener("change", () => {
+                    document.querySelectorAll(".option-label input").forEach(function (input) {
+                        input.addEventListener("change", function () {
                             const groupName = input.name;
 
-                            document.querySelectorAll("input[name='" + groupName + "']").forEach(radio => {
+                            document.querySelectorAll("input[name='" + groupName + "']").forEach(function (radio) {
                                 radio.closest(".option-label").classList.remove("selected");
                             });
 
@@ -346,15 +397,17 @@
 
                     if (rawTime && rawTime.trim() !== "") {
                         let parsed = parseFloat(rawTime.replace(",", "."));
+
                         if (!isNaN(parsed) && parsed > 0) {
                             tMax = parsed;
                         }
                     }
 
                     state.tiempoRestante = Math.floor(tMax * 60);
+
                     actualizarReloj();
 
-                    state.timerId = setInterval(() => {
+                    state.timerId = setInterval(function () {
                         state.tiempoRestante = Math.max(0, state.tiempoRestante - 1);
                         actualizarReloj();
 
@@ -366,44 +419,31 @@
                 }
 
                 function actualizarReloj() {
-                    const minutes = Math.floor(state.tiempoRestante / 60).toString().padStart(2, "0");
-                    const seconds = (state.tiempoRestante % 60).toString().padStart(2, "0");
+                    const minutos = Math.floor(state.tiempoRestante / 60).toString().padStart(2, "0");
+                    const segundos = (state.tiempoRestante % 60).toString().padStart(2, "0");
 
-                    if (elements.timer) {
-                        elements.timer.textContent = minutes + ":" + seconds;
+                    if (reloj) {
+                        reloj.textContent = minutos + ":" + segundos;
                     }
 
-                    if (elements.timerBox && state.tiempoRestante <= 60) {
-                        elements.timerBox.style.background = "#991b1b";
+                    if (timerBox && state.tiempoRestante <= 60) {
+                        timerBox.classList.add("danger");
                     }
                 }
 
                 function terminarPorTiempo() {
-                    if (state.locked) return;
-
-                    state.locked = true;
-
-                    if (elements.finishBtn) {
-                        elements.finishBtn.textContent = "Tiempo agotado - Guardando...";
-                    }
-
-                    if (elements.form) {
-                        elements.form.submit();
-                    }
-                }
-
-                function handleSubmit(event) {
                     if (state.locked) {
-                        event.preventDefault();
                         return;
                     }
 
                     state.locked = true;
-                    clearInterval(state.timerId);
 
-                    if (elements.finishBtn) {
-                        elements.finishBtn.textContent = "Guardando test...";
-                        elements.finishBtn.style.pointerEvents = "none";
+                    if (finishBtn) {
+                        finishBtn.textContent = "Tiempo agotado - Guardando...";
+                    }
+
+                    if (form) {
+                        form.submit();
                     }
                 }
             </script>
@@ -412,9 +452,7 @@
 
         <c:otherwise>
             <div class="empty-state">
-                <div class="alert alert-danger">
-                    No hay ningún test configurado como activo o la sesión es inválida.
-                </div>
+                No hay ningún test configurado como activo o la sesión es inválida.
             </div>
         </c:otherwise>
     </c:choose>

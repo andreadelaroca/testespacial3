@@ -35,19 +35,22 @@ public class GuardarTest extends HttpServlet {
         EntityManager em = XPersistence.getManager();
         EntityTransaction tx = em.getTransaction();
 
+        boolean transaccionPropia = false;
+
         try {
             String testIdStr = request.getParameter("testId");
 
             if (testIdStr == null || testIdStr.trim().isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/html/test.jsp?error=true");
+                response.sendRedirect(request.getContextPath() + "/cargarTest?error=true");
                 return;
             }
 
             int testId = Integer.parseInt(testIdStr);
+
             Test test = em.find(Test.class, testId);
 
             if (test == null) {
-                response.sendRedirect(request.getContextPath() + "/html/test.jsp?error=true");
+                response.sendRedirect(request.getContextPath() + "/cargarTest?error=true");
                 return;
             }
 
@@ -65,11 +68,17 @@ public class GuardarTest extends HttpServlet {
                 return;
             }
 
+            /*
+             * OpenXava a veces ya trae una transacción activa.
+             * Por eso solo iniciamos una nueva si NO existe una activa.
+             */
             if (!tx.isActive()) {
                 tx.begin();
+                transaccionPropia = true;
             }
 
             DetalleAplicacion detalle = new DetalleAplicacion();
+
             detalle.setTest(test);
             detalle.setSujeto(sujeto);
             detalle.setFecha(new Date());
@@ -77,17 +86,11 @@ public class GuardarTest extends HttpServlet {
             LocalTime horaInicio = (LocalTime) request.getSession().getAttribute("horaInicio");
 
             if (horaInicio == null) {
-                float tiempoMax = test.getTiempoMax();
-                long segundos = Math.round(tiempoMax * 60);
-                horaInicio = LocalTime.now().minusSeconds(segundos);
+                horaInicio = LocalTime.now();
             }
 
             detalle.setHoraInicio(horaInicio);
             detalle.setHoraFin(LocalTime.now());
-
-            List<Respuesta> respuestas = new ArrayList<>();
-
-            int aciertos = 0;
 
             Long totalPreguntas = (Long) em.createQuery(
                             "SELECT COUNT(p) FROM Pregunta p WHERE p.test.id = :testId"
@@ -95,39 +98,53 @@ public class GuardarTest extends HttpServlet {
                     .setParameter("testId", testId)
                     .getSingleResult();
 
+            List<Respuesta> respuestas = new ArrayList<>();
+
+            int aciertos = 0;
+
             Map<String, String[]> parametros = request.getParameterMap();
 
             for (Map.Entry<String, String[]> entry : parametros.entrySet()) {
+
                 String nombreParametro = entry.getKey();
 
-                if (nombreParametro.startsWith("respuesta_")) {
-                    String preguntaIdStr = nombreParametro.replace("respuesta_", "");
-                    String opcionIdStr = entry.getValue()[0];
+                if (!nombreParametro.startsWith("respuesta_")) {
+                    continue;
+                }
 
-                    if (opcionIdStr == null || opcionIdStr.trim().isEmpty()) {
-                        continue;
-                    }
+                String preguntaIdStr = nombreParametro.replace("respuesta_", "");
+                String[] valores = entry.getValue();
 
-                    int preguntaId = Integer.parseInt(preguntaIdStr);
-                    int opcionId = Integer.parseInt(opcionIdStr);
+                if (valores == null || valores.length == 0) {
+                    continue;
+                }
 
-                    Pregunta pregunta = em.find(Pregunta.class, preguntaId);
-                    Opcion opcion = em.find(Opcion.class, opcionId);
+                String opcionIdStr = valores[0];
 
-                    if (pregunta == null || opcion == null) {
-                        continue;
-                    }
+                if (opcionIdStr == null || opcionIdStr.trim().isEmpty()) {
+                    continue;
+                }
 
-                    Respuesta respuesta = new Respuesta();
-                    respuesta.setDetalleAplicacion(detalle);
-                    respuesta.setPregunta(pregunta);
-                    respuesta.setOpcion(opcionId);
+                int preguntaId = Integer.parseInt(preguntaIdStr);
+                int opcionId = Integer.parseInt(opcionIdStr);
 
-                    respuestas.add(respuesta);
+                Pregunta pregunta = em.find(Pregunta.class, preguntaId);
+                Opcion opcion = em.find(Opcion.class, opcionId);
 
-                    if (opcion.isAcierto()) {
-                        aciertos++;
-                    }
+                if (pregunta == null || opcion == null) {
+                    continue;
+                }
+
+                Respuesta respuesta = new Respuesta();
+
+                respuesta.setDetalleAplicacion(detalle);
+                respuesta.setPregunta(pregunta);
+                respuesta.setOpcion(opcionId);
+
+                respuestas.add(respuesta);
+
+                if (opcion.isAcierto()) {
+                    aciertos++;
                 }
             }
 
@@ -139,34 +156,47 @@ public class GuardarTest extends HttpServlet {
 
             em.persist(detalle);
 
-            tx.commit();
+            /*
+             * Si la transacción la iniciamos nosotros, hacemos commit.
+             * Si ya venía activa por OpenXava, solo hacemos flush.
+             */
+            if (transaccionPropia) {
+                tx.commit();
+            } else {
+                em.flush();
+            }
 
             request.getSession().invalidate();
 
             response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().println("""
-                    <!DOCTYPE html>
-                    <html lang='es'>
-                    <head>
-                        <meta charset='UTF-8'>
-                        <title>Test Finalizado</title>
-                    </head>
-                    <body style='margin:0; height:100vh; display:flex; justify-content:center; align-items:center; background:#1a365d; font-family:Arial, sans-serif;'>
-                        <div style='background:white; padding:40px; border-radius:12px; text-align:center; max-width:500px; box-shadow:0 8px 25px rgba(0,0,0,.25);'>
-                            <h1 style='color:#2f855a;'>Test guardado con éxito</h1>
-                            <p style='color:#4a5568;'>Las respuestas fueron registradas en DetalleAplicacion.</p>
-                        </div>
-                    </body>
-                    </html>
-                    """);
+
+            response.getWriter().println("<!DOCTYPE html>");
+            response.getWriter().println("<html lang='es'>");
+            response.getWriter().println("<head>");
+            response.getWriter().println("<meta charset='UTF-8'>");
+            response.getWriter().println("<title>Test Finalizado</title>");
+            response.getWriter().println("</head>");
+            response.getWriter().println("<body style='margin:0;height:100vh;display:flex;justify-content:center;align-items:center;background:#083c57;font-family:Arial,sans-serif;'>");
+            response.getWriter().println("<div style='background:white;padding:40px;border-radius:15px;text-align:center;max-width:500px;box-shadow:0 10px 30px rgba(0,0,0,.35);'>");
+            response.getWriter().println("<h1 style='color:#2f855a;margin-top:0;'>Test guardado con éxito</h1>");
+            response.getWriter().println("<p style='color:#555;'>Las respuestas fueron registradas correctamente en DetalleAplicacion.</p>");
+            response.getWriter().println("</div>");
+            response.getWriter().println("</body>");
+            response.getWriter().println("</html>");
 
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
+
+            /*
+             * Solo hacemos rollback si nosotros iniciamos la transacción.
+             * Si era de OpenXava, NO la tocamos para evitar errores al destruir el request.
+             */
+            if (transaccionPropia && tx != null && tx.isActive()) {
                 tx.rollback();
             }
 
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/html/test.jsp?error=true");
+
+            response.sendRedirect(request.getContextPath() + "/cargarTest?error=true");
         }
     }
 }
