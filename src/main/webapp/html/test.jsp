@@ -1,150 +1,132 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
-<%@ page import="javax.persistence.EntityManager" %>
-<%@ page import="org.openxava.jpa.XPersistence" %>
-<%@ page import="org.example.testespacial3.modelo.Test" %>
-<%@ page import="org.example.testespacial3.modelo.Pregunta" %>
-<%@ page import="org.example.testespacial3.modelo.Opcion" %>
-
-<%
-    // Recuperamos el ID del test desde la URL o el Request
-    String testIdStr = request.getParameter("testId");
-    Test testActual = null;
-    int tiempoMaximo = 30; // Tiempo por defecto
-    List<Pregunta> preguntas = null;
-
-    if (testIdStr != null && !testIdStr.isEmpty()) {
-        try {
-            EntityManager em = XPersistence.getManager();
-            int testId = Integer.parseInt(testIdStr);
-            testActual = em.find(Test.class, testId);
-
-            if (testActual != null) {
-                // Extraer el tiempo de forma segura según tu modelo
-                try {
-                    Object tMaxObj = testActual.getClass().getMethod("getTiempomax").invoke(testActual);
-                    if (tMaxObj instanceof Number) tiempoMaximo = ((Number) tMaxObj).intValue();
-                    else if (tMaxObj instanceof String) tiempoMaximo = Integer.parseInt((String) tMaxObj);
-                } catch (Exception ignored) {}
-
-                // Cargar las preguntas asociadas
-                preguntas = em.createQuery("SELECT p FROM Pregunta p WHERE p.test.id = :testId", Pregunta.class)
-                        .setParameter("testId", testId)
-                        .getResultList();
-
-                // Guardar hora de inicio en la sesión
-                if(session.getAttribute("horaInicio") == null) {
-                    session.setAttribute("horaInicio", java.time.LocalTime.now());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-%>
+<%@ page isELIgnored="false" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluación Espacial</title>
+    <title>Test de Inteligencia Espacial</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
-        .timer { font-size: 24px; font-weight: bold; color: #dc3545; }
-        .pregunta-card { margin-bottom: 25px; padding: 15px; border: 1px solid #e9ecef; border-radius: 5px; background: #fafafa; }
-        .opcion { display: block; margin: 10px 0; }
-        .btn-submit { display: block; width: 100%; padding: 12px; font-size: 16px; font-weight: bold; color: #fff; background-color: #28a745; border: none; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        .btn-submit:hover { background-color: #218838; }
-        .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; font-weight: bold; }
-        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #1a365d; color: #ffffff; margin: 0; padding: 20px; }
+        .container { max-width: 850px; margin: auto; background: #2d3748; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .header { border-bottom: 2px solid #4299e1; padding-bottom: 15px; margin-bottom: 25px; }
+        .header h2 { margin: 0; color: #63b3ed; font-size: 28px; }
+        .instructions { background: #4a5568; padding: 15px; border-radius: 6px; margin-bottom: 25px; line-height: 1.6; font-size: 14px; border-left: 5px solid #4299e1; }
+        .timer-container { font-size: 20px; font-weight: bold; color: #fc8181; margin-bottom: 20px; text-align: right; }
+        .pregunta-card { background: #3d4a5d; margin-bottom: 30px; padding: 20px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .pregunta-card h4 { margin-top: 0; color: #90cdf4; font-size: 18px; border-bottom: 1px solid #4a5568; padding-bottom: 8px; }
+        .imagen-wrapper { background: #ffffff; padding: 15px; border-radius: 6px; display: inline-block; margin: 15px 0; }
+        .imagen-wrapper img { max-width: 100%; height: auto; display: block; }
+        .opciones-container { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; background: #2d3748; padding: 12px; border-radius: 4px; }
+        .opcion-label { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; border-radius: 4px; background: #4a5568; transition: background 0.2s; }
+        .opcion-label:hover { background: #4299e1; }
+        .opcion-label input { cursor: pointer; transform: scale(1.2); }
+        .btn-submit { display: block; width: 100%; padding: 14px; font-size: 18px; font-weight: bold; color: #fff; background-color: #38a169; border: none; border-radius: 6px; cursor: pointer; transition: background 0.3s; margin-top: 20px; }
+        .btn-submit:hover { background-color: #2f855a; }
+        .alert { padding: 15px; border-radius: 6px; margin-bottom: 25px; text-align: center; font-weight: bold; font-size: 16px; }
+        .alert-success { background-color: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4;}
+        .alert-danger { background-color: #fed7d7; color: #742a2a; border: 1px solid #feb2b2;}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <% if ("true".equals(request.getParameter("success"))) { %>
-    <div class="alert alert-success">¡El test se ha guardado correctamente!</div>
-    <% } %>
+    <c:if test="${param.success == 'true'}">
+        <div class="alert alert-success">¡El test se ha procesado y guardado con éxito!</div>
+    </c:if>
+    <c:if test="${param.error == 'true'}">
+        <div class="alert alert-danger">Error al guardar el test. Verifique la base de datos.</div>
+    </c:if>
 
-    <% if ("true".equals(request.getParameter("error"))) { %>
-    <div class="alert alert-danger">Ha ocurrido un error al procesar el test. Por favor, contacte con el administrador.</div>
-    <% } %>
+    <c:choose>
+        <c:when test="${not empty test}">
 
-    <% if (testActual != null && preguntas != null) { %>
-    <div class="header">
-        <h2><%= testActual.getNombre() != null ? testActual.getNombre() : "Evaluación" %></h2>
-        <div class="timer" id="reloj">--:--</div>
-    </div>
+            <div class="header">
+                <h2>${test.nombre != null ? test.nombre : 'Evaluación Espacial'}</h2>
+            </div>
 
-    <form id="formularioTest" action="<%= request.getContextPath() %>/guardarTest" method="post">
-        <input type="hidden" name="testId" value="<%= testIdStr %>">
-        <input type="hidden" name="tiempomaximo" value="<%= tiempoMaximo %>">
+            <div class="instructions">
+                <strong>Sujeto:</strong> ${sujeto.nombres} ${sujeto.apellidos} <br><br>
+                <strong>Instrucciones:</strong> ${test.instrucciones}
+            </div>
 
-        <% for (Pregunta p : preguntas) { %>
-        <div class="pregunta-card">
-            <h4><%= p.getPregunta() != null ? p.getPregunta() : "¿Pregunta sin título?" %></h4>
+            <div class="timer-container">
+                Tiempo restante: <span id="reloj">--:--</span>
+            </div>
 
-            <%
-                List<Opcion> opciones = XPersistence.getManager()
-                        .createQuery("SELECT o FROM Opcion o WHERE o.pregunta.id = :pregId", Opcion.class)
-                        .setParameter("pregId", p.getId())
-                        .getResultList();
+            <form id="formularioTest" action="${pageContext.request.contextPath}/guardarTest" method="post">
+                <input type="hidden" name="testId" value="${test.id}">
+                <input type="hidden" name="tiempomaximo" value="${test.tiempoMax}">
 
-                for (Opcion o : opciones) {
-            %>
-            <label class="opcion">
-                <input type="radio" name="respuesta_<%= p.getId() %>" value="<%= o.getId() %>" required>
-                <%= o.getRespuesta() %>
-            </label>
-            <% } %>
-        </div>
-        <% } %>
+                <c:forEach var="pregunta" items="${test.preguntas}" varStatus="status">
+                    <div class="pregunta-card">
 
-        <button type="submit" class="btn-submit">Finalizar y Enviar Test</button>
-    </form>
-    <% } else if (request.getParameter("success") == null && request.getParameter("error") == null) { %>
-    <div class="alert alert-danger">No se ha encontrado el test solicitado o no hay preguntas disponibles.</div>
-    <% } %>
+                        <h4>Pregunta ${status.index + 1}</h4>
+
+                        <c:if test="${not empty imagenes[pregunta.id]}">
+                            <div class="imagen-wrapper">
+                                <img src="data:image/png;base64,${imagenes[pregunta.id]}" alt="Estímulo visual">
+                            </div>
+                        </c:if>
+
+                        <div class="opciones-container">
+                            <c:forEach var="opcion" items="${pregunta.opciones}">
+                                <label class="opcion-label">
+                                    <input type="radio" name="respuesta_${pregunta.id}" value="${opcion.id}" required>
+                                        ${opcion.respuesta}
+                                </label>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:forEach>
+
+                <button type="submit" class="btn-submit">Finalizar y Guardar Test</button>
+            </form>
+
+            <script>
+                // Temporizador robusto leyendo la variable del modelo
+                let tMaxStr = '${test.tiempoMax}';
+                let tMax = parseFloat(tMaxStr.replace(',', '.')); // Soporte por si usa coma decimal
+                if (isNaN(tMax) || tMax <= 0) tMax = 3.5; // Por defecto
+
+                let tiempoRestante = Math.floor(tMax * 60);
+
+                function actualizarTemporizador() {
+                    let minutos = Math.floor(tiempoRestante / 60);
+                    let segundos = tiempoRestante % 60;
+
+                    minutos = minutos < 10 ? "0" + minutos : minutos;
+                    segundos = segundos < 10 ? "0" + segundos : segundos;
+
+                    const relojEl = document.getElementById("reloj");
+                    if (relojEl) relojEl.innerHTML = minutos + ":" + segundos;
+
+                    if (tiempoRestante > 0) {
+                        tiempoRestante--;
+                    } else {
+                        clearInterval(intervalo);
+                        const form = document.getElementById("formularioTest");
+                        if (form) {
+                            form.submit(); // Envío automático si se agota
+                        }
+                    }
+                }
+
+                let intervalo = setInterval(actualizarTemporizador, 1000);
+                actualizarTemporizador();
+            </script>
+
+        </c:when>
+
+        <c:otherwise>
+            <div class="alert alert-danger" style="margin-top: 50px;">
+                No hay ningún test configurado como activo en el sistema o su sesión ha expirado.
+            </div>
+        </c:otherwise>
+    </c:choose>
+
 </div>
-
-<script>
-    // Recuperar el tiempo máximo del atributo en Java (en minutos) y pasarlo a segundos
-    let tiempoRestante = <%= tiempoMaximo %> * 60;
-
-    function actualizarTemporizador() {
-        let minutos = Math.floor(tiempoRestante / 60);
-        let segundos = tiempoRestante % 60;
-
-        minutos = minutos < 10 ? "0" + minutos : minutos;
-        segundos = segundos < 10 ? "0" + segundos : segundos;
-
-        const relojEl = document.getElementById("reloj");
-        if(relojEl) {
-            relojEl.innerHTML = minutos + ":" + segundos;
-        }
-
-        if (tiempoRestante > 0) {
-            tiempoRestante--;
-        } else {
-            // Cuando llega a 0, deshabilitamos el botón y enviamos el formulario obligatoriamente
-            clearInterval(intervalo);
-            const form = document.getElementById("formularioTest");
-            if(form) {
-                form.submit();
-            }
-        }
-    }
-
-    // Iniciar el reloj si existe el test
-    <% if (testActual != null) { %>
-    let intervalo = setInterval(actualizarTemporizador, 1000);
-    actualizarTemporizador();
-    <% } %>
-</script>
-
 </body>
 </html>
