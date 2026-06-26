@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+
+import org.example.testespacial3.modelo.Pregunta;
+import org.example.testespacial3.modelo.Test;
 import org.example.testespacial3.modelo.Usuario;
 import org.example.testespacial3.modelo.Sujeto;
 
@@ -14,51 +17,87 @@ import org.example.testespacial3.modelo.Sujeto;
 public class CargarTest extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * El método POST recibe los datos del formulario de login de forma segura.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Evitamos problemas de caracteres raros o tildes en los inputs
-        request.setCharacterEncoding("UTF-8");
+        String user = request.getParameter("username");
+        String pass = request.getParameter("password");
 
-        // 1. Capturamos los datos que vienen desde el html/login.html
-        // (Asegúrate de que los inputs en tu HTML tengan name="usuario" y name="password")
-        String txtUsuario = request.getParameter("usuario");
-        String txtClave = request.getParameter("password");
+        // Validamos si enviaron campos vacíos
+        if (user == null || pass == null || user.trim().isEmpty() || pass.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/html/login.html?error=1");
+            return;
+        }
 
-        // Mensaje de control en la consola de IntelliJ para verificar que los datos llegan
-        System.out.println(">>> CargarTest: Intento de acceso con el usuario: " + txtUsuario);
+        javax.persistence.EntityManager em = org.openxava.jpa.XPersistence.getManager();
 
-        // 2. [ZONA DE TU LÓGICA]
-        // Aquí puedes validar contra tu base de datos usando tus clases 'Usuario' o 'Sujeto'
-        // Ejemplo ficticio:
-        // if (ValidarUsuario.existe(txtUsuario, txtClave)) { ... }
+        try {
+            String queryLogin = "SELECT s FROM Sujeto s WHERE s.username = :usuario AND s.password = :clave";
+            Sujeto sujetoLogueado = em.createQuery(queryLogin, Sujeto.class)
+                    .setParameter("usuario", user)
+                    .setParameter("clave", pass)
+                    .getSingleResult();
 
-        // 3. Pasamos el control al método doGet para preparar y redirigir la interfaz
-        doGet(request, response);
+            // Login Exitoso
+            javax.servlet.http.HttpSession session = request.getSession();
+            session.setAttribute("sujetoId", sujetoLogueado.getId());
+
+            response.sendRedirect(request.getContextPath() + "/cargarTest");
+
+        } catch (javax.persistence.NoResultException e) {
+            // Login Fallido: Lo regresamos a su login.html con el aviso de error
+            response.sendRedirect(request.getContextPath() + "/html/login.html?error=1");
+        }
     }
 
-    /**
-     * El método GET se encarga de preparar la sesión y despachar al usuario hacia el test.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Creamos u obtenemos la sesión HTTP del paciente para guardar su progreso
         HttpSession session = request.getSession();
 
-        // Aquí puedes setear atributos iniciales para el test, por ejemplo:
-        // session.setAttribute("aciertos", 0);
-        // session.setAttribute("preguntaActual", 1);
+        // Protección de Ruta: Si no se ha logueado, de vuelta al login
+        if (session.getAttribute("sujetoId") == null) {
+            response.sendRedirect(request.getContextPath() + "/html/login.html");
+            return;
+        }
 
-        System.out.println(">>> CargarTest: Redirigiendo limpiamente a pregunta.html...");
+        javax.persistence.EntityManager em = org.openxava.jpa.XPersistence.getManager();
 
-        // 4. LA SOLUCIÓN AL BLANCO: Redirección explícita mediante el navegador.
-        // Usamos request.getContextPath() para asegurar que la ruta sea: /testespacial3/html/pregunta.html
-        response.sendRedirect(request.getContextPath() + "/html/pregunta.html");
+        try {
+            // Buscamos el test que esté activo (estado = true)
+            String query = "SELECT t FROM Test t LEFT JOIN FETCH t.preguntas WHERE t.estado = true";
+            java.util.List<Test> testsActivos = em.createQuery(query, Test.class).getResultList();
+
+            if (testsActivos.isEmpty()) {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().println("<h1 style='text-align:center;margin-top:50px;'>No hay ningún test habilitado por el administrador en este momento.</h1>");
+                return;
+            }
+
+            Test testActual = testsActivos.get(0);
+
+            // Mapeo e inversión de byte[] a cadenas Base64 para el JSP
+            java.util.Map<Integer, String> imagenesBase64 = new java.util.HashMap<>();
+            if (testActual.getPreguntas() != null) {
+                for (Pregunta p : testActual.getPreguntas()) {
+                    if (p.getImagen() != null) {
+                        String base64 = java.util.Base64.getEncoder().encodeToString(p.getImagen());
+                        imagenesBase64.put(p.getId(), base64);
+                    }
+                }
+            }
+
+            // Enviamos los objetos directo al formulario dinámico hacia abajo
+            request.setAttribute("test", testActual);
+            request.setAttribute("imagenes", imagenesBase64);
+
+            request.getRequestDispatcher("/html/test.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().println("Error interno al cargar el test.");
+        }
     }
 }

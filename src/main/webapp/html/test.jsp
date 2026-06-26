@@ -1,64 +1,57 @@
-<%@ page import="java.util.List" %>
-<%@ page import="org.example.testespacial3.modelo.Pregunta" %>
-<%@ page import="org.example.testespacial3.modelo.Opcion" %>
-<%@ page import="java.util.Map" %>
+<%@ page isELIgnored="false" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    // Recuperamos las listas que nos mandó el Servlet CargarTest
-    List<Pregunta> preguntas = (List<Pregunta>) request.getAttribute("preguntas");
-    Map<Integer, String> imagenes = (Map<Integer, String>) request.getAttribute("imagenes");
-%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Test de Habilidad Espacial</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .contenedor { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .pregunta-card { border: 1px solid #e0e0e0; padding: 20px; margin-bottom: 25px; border-radius: 8px; background: #fafafa; }
-        img { max-width: 100%; height: auto; border: 1px solid #ccc; margin-bottom: 15px; border-radius: 4px; }
-        .opcion { font-size: 16px; margin-bottom: 10px; display: block; cursor: pointer; }
-        .btn-enviar { background-color: #007BFF; color: white; border: none; padding: 12px 25px; font-size: 18px; border-radius: 5px; cursor: pointer; width: 100%; }
-        .btn-enviar:hover { background-color: #0056b3; }
-    </style>
+    <title>Test Espacial</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/html/css/style.css">
 </head>
 <body>
-
-<div class="contenedor">
-    <h1 style="text-align: center;">Test de Inteligencia Espacial</h1>
-    <p style="text-align: center;">Responde todas las preguntas basándote en las imágenes presentadas.</p>
-
-    <form action="<%=request.getContextPath()%>/guardarTest" method="POST">
-
-        <% if (preguntas != null && !preguntas.isEmpty()) {
-            int numero = 1;
-            for (Pregunta p : preguntas) { %>
-        <div class="pregunta-card">
-            <h3>Pregunta <%=numero%></h3>
-
-            <%-- Dibuja la imagen en Base64 si existe en el mapa --%>
-            <% if (imagenes != null && imagenes.containsKey(p.getId())) { %>
-            <img src="<%=imagenes.get(p.getId())%>" alt="Imagen del test"/>
-            <% } %>
-
-            <div style="margin-top: 15px;">
-                <%-- Recorremos las opciones de la pregunta actual --%>
-                <% for (Opcion o : p.getOpciones()) { %>
-                <label class="opcion">
-                    <input type="radio" name="preg_<%=p.getId()%>" value="<%=o.getId()%>" required>
-                    Opción <%=o.getRespuesta()%>
-                </label>
-                <% } %>
-            </div>
+<div class="test-container">
+    <header class="test-header">
+        <h1>${test.nombre}</h1>
+        <div class="instrucciones-box">
+            <p>${test.instrucciones}</p>
         </div>
-        <%      numero++;
-        }
-        } else { %>
-        <p style="text-align: center; color: red;">Error: No se cargaron las preguntas. Verifica la base de datos.</p>
-        <% } %>
 
-        <button type="submit" class="btn-enviar">Finalizar y Evaluar</button>
+        <c:if test="${!test.estado}">
+            <div class="alerta-inactivo">
+                <strong>Aviso:</strong> Este test está inactivo. No puedes seleccionar opciones.
+            </div>
+        </c:if>
+    </header>
+
+    <form action="../guardarTest" method="POST">
+
+        <c:forEach var="pregunta" items="${test.preguntas}" varStatus="status">
+            <div class="pregunta-card">
+                <h3>Pregunta ${status.index + 1}</h3>
+
+                <div class="imagen-container">
+                    <img src="data:image/png;base64,${imagenes[pregunta.id]}" alt="Imagen de la pregunta">
+                </div>
+
+                <div class="opciones-container">
+                    <c:forEach var="opcion" items="${pregunta.opciones}">
+                        <label class="opcion-label">
+                            <input type="radio"
+                                   name="respuesta_${pregunta.id}"
+                                   value="${opcion.id}"
+                                   <c:if test="${!test.estado}">disabled</c:if> >
+                            Opción ${opcion.respuesta}
+                        </label>
+                    </c:forEach>
+                </div>
+            </div>
+            <hr>
+        </c:forEach>
+
+        <c:if test="${test.estado}">
+            <button type="submit" class="btn-enviar">Finalizar Test</button>
+        </c:if>
     </form>
 </div>
 

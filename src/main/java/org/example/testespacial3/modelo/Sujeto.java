@@ -11,8 +11,4 @@ public class Sujeto extends Usuario {
 
 	@OneToMany(mappedBy = "sujeto", cascade = CascadeType.ALL) @ReadOnly @ListProperties("fecha, horaInicio, test.nombre, aciertos, desaciertos")
 	private Collection<DetalleAplicacion> aplicaciones;
-
-	public void realizarTest(){
-
-	}
 }
