@@ -36,9 +36,9 @@ public class CargarTest extends HttpServlet {
 
             request.getSession().setAttribute("horaInicioTest", java.time.LocalTime.now());
 
-            request.getRequestDispatcher("/html/test.jsp").forward(request, response);
+            request.getRequestDispatcher("test.jsp").forward(request, response);
 
-            request.getRequestDispatcher("/html/test.jsp").forward(request, response);
+            request.getRequestDispatcher("test.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
