@@ -2,11 +2,6 @@
  
 <!DOCTYPE editores SYSTEM "dtds/editores.dtd">
 
-<!-- 
-Aprende a definir tus propios editores en: 
-https://www.openxava.org/OpenXavaDoc/docs/customizing_en.html 
--->
- 
 <editores>
 
 	<!--  

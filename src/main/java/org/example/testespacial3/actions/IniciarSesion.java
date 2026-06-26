@@ -33,7 +33,7 @@ public class IniciarSesion extends ViewBaseAction implements IForwardAction {
             getRequest().getSession().setAttribute("xava.user", username.trim());
 
             if (usuarioLogueado.getClass().getSimpleName().toLowerCase().contains("sujeto")) {
-                this.forwardURI = "/html/index.html";
+                this.forwardURI = "/html/forms.html";
             } else {
                 this.forwardURI = "/m/Test";
             }

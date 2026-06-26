@@ -61,18 +61,4 @@ public class Usuario {
 	protected void onUpdate() {
 		this.updatedAt = LocalDateTime.now();
 	}
-
-	public void cerrarSesion(){
-
-	}
-
-	public void iniciarSesion(){
-
-	}
-
-	public void registrarSesion(){
-
-	}
-
-
 }
