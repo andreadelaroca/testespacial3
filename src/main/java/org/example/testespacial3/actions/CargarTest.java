@@ -77,6 +77,10 @@ public class CargarTest extends HttpServlet {
             }
 
             Test testActual = testsActivos.get(0);
+            Integer idSujeto = (Integer) session.getAttribute("sujetoId");
+            Sujeto sujetoLogueado = em.find(Sujeto.class, idSujeto);
+            request.setAttribute("sujeto", sujetoLogueado);
+            session.setAttribute("horaInicio", java.time.LocalTime.now());
 
             // Mapeo e inversión de byte[] a cadenas Base64 para el JSP
             java.util.Map<Integer, String> imagenesBase64 = new java.util.HashMap<>();

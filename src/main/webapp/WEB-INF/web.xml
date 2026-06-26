@@ -29,15 +29,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>guardarTest</servlet-name>
-    <servlet-class>org.example.testespacial3.actions.GuardarTest</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>guardarTest</servlet-name>
-    <url-pattern>/guardarTest</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>procesarLogin</servlet-name>
     <servlet-class>org.example.testespacial3.actions.ProcesarLogin</servlet-class>
   </servlet>
