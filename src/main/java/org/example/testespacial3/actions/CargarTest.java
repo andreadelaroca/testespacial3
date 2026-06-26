@@ -1,52 +1,64 @@
 package org.example.testespacial3.actions;
 
-import org.example.testespacial3.modelo.Pregunta;
-import javax.persistence.*;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import org.example.testespacial3.modelo.Usuario;
+import org.example.testespacial3.modelo.Sujeto;
 
+@WebServlet("/cargarTest")
 public class CargarTest extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-
+    /**
+     * El método POST recibe los datos del formulario de login de forma segura.
+     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
+        // Evitamos problemas de caracteres raros o tildes en los inputs
         request.setCharacterEncoding("UTF-8");
-        EntityManager em = emf.createEntityManager();
 
-        try {
-            TypedQuery<Pregunta> query = em.createQuery(
-                    "SELECT DISTINCT p FROM Pregunta p LEFT JOIN FETCH p.opciones WHERE p.deletedAt IS NULL",
-                    Pregunta.class);
-            List<Pregunta> preguntas = query.getResultList();
+        // 1. Capturamos los datos que vienen desde el html/login.html
+        // (Asegúrate de que los inputs en tu HTML tengan name="usuario" y name="password")
+        String txtUsuario = request.getParameter("usuario");
+        String txtClave = request.getParameter("password");
 
-            Map<Integer, String> imagenesBase64 = new HashMap<>();
-            for (Pregunta p : preguntas) {
-                if (p.getImagen() != null) {
-                    String base64 = Base64.getEncoder().encodeToString(p.getImagen());
-                    imagenesBase64.put(p.getId(), "data:image/png;base64," + base64);
-                }
-            }
+        // Mensaje de control en la consola de IntelliJ para verificar que los datos llegan
+        System.out.println(">>> CargarTest: Intento de acceso con el usuario: " + txtUsuario);
 
-            request.setAttribute("preguntas", preguntas);
-            request.setAttribute("imagenes", imagenesBase64);
+        // 2. [ZONA DE TU LÓGICA]
+        // Aquí puedes validar contra tu base de datos usando tus clases 'Usuario' o 'Sujeto'
+        // Ejemplo ficticio:
+        // if (ValidarUsuario.existe(txtUsuario, txtClave)) { ... }
 
-            request.getSession().setAttribute("horaInicioTest", java.time.LocalTime.now());
+        // 3. Pasamos el control al método doGet para preparar y redirigir la interfaz
+        doGet(request, response);
+    }
 
-            request.getRequestDispatcher("test.jsp").forward(request, response);
+    /**
+     * El método GET se encarga de preparar la sesión y despachar al usuario hacia el test.
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-            request.getRequestDispatcher("test.jsp").forward(request, response);
+        // Creamos u obtenemos la sesión HTTP del paciente para guardar su progreso
+        HttpSession session = request.getSession();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().println("Error cargando el test: " + e.getMessage());
-        } finally {
-            if (em.isOpen()) {
-                em.close();
-            }
-        }
+        // Aquí puedes setear atributos iniciales para el test, por ejemplo:
+        // session.setAttribute("aciertos", 0);
+        // session.setAttribute("preguntaActual", 1);
+
+        System.out.println(">>> CargarTest: Redirigiendo limpiamente a pregunta.html...");
+
+        // 4. LA SOLUCIÓN AL BLANCO: Redirección explícita mediante el navegador.
+        // Usamos request.getContextPath() para asegurar que la ruta sea: /testespacial3/html/pregunta.html
+        response.sendRedirect(request.getContextPath() + "/html/pregunta.html");
     }
 }

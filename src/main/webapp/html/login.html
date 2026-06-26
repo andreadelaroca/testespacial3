@@ -21,31 +21,41 @@
         </div>
 
         <div class="entry">
-            <h3>Entrar como paciente</h3>
-            <p>Ingresa tus credenciales para realizar el test.</p>
-            <form action="/testespacial3/procesarLogin" method="POST">
-                <div style="margin-bottom: 10px;">
-                    <input type="text" name="username" placeholder="Nombre de usuario" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            <h3>1. Iniciar Sesión (Pacientes)</h3>
+            <p>Si ya estás registrado, ingresa tus datos para realizar el test.</p>
+            <form action="../cargarTest" method="POST">
+
+                <div class="input-group">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" id="usuario" name="usuario" placeholder="Ingresa tu usuario" required>
                 </div>
-                <div style="margin-bottom: 15px;">
-                    <input type="password" name="password" placeholder="Contraseña" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+
+                <div class="input-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Contraseña" required>
                 </div>
-                <div class="actions">
-                    <button type="submit" class="button primary" style="width: 100%; cursor: pointer; border: none; font-size: 16px;">Iniciar Sesión</button>
-                </div>
+
+                <button type="submit" class="btn-ingresar">Ingresar al Test</button>
             </form>
-            <div style="margin-top: 15px; text-align: center;">
-                <a href="/testespacial3/html/registro.html" style="color: #007BFF; text-decoration: none; font-size: 14px;">¿No tienes cuenta? Regístrate aquí</a>
+        </div>
+
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+        <div class="entry">
+            <h3>2. ¿Eres un paciente nuevo?</h3>
+            <p>Crea tu cuenta de sujeto para poder participar en la aplicación.</p>
+            <div class="actions">
+                <a class="button secondary" href="/testespacial3/html/registro.html" style="display: block; text-align: center; text-decoration: none;">Registrarme como Paciente</a>
             </div>
         </div>
 
         <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
         <div class="entry">
-            <h3>Administración</h3>
-            <p>Acceso exclusivo al entorno OpenXava para gestionar el sistema.</p>
+            <h3>3. Panel de Administración</h3>
+            <p>Acceso exclusivo para el Administrador del sistema mediante OpenXava.</p>
             <div class="actions">
-                <a class="button secondary" href="/testespacial3/m/SignIn">Ir a Panel Admin</a>
+                <a class="button secondary" href="../naviox/welcome.jsp" style="display: block; text-align: center; text-decoration: none; background-color: #6c757d; color: white;">Ir a OpenXava</a>
             </div>
         </div>
     </section>

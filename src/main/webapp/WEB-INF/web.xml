@@ -29,15 +29,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>cargarTest</servlet-name>
-    <servlet-class>org.example.testespacial3.actions.CargarTest</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>cargarTest</servlet-name>
-    <url-pattern>/cargarTest</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>guardarTest</servlet-name>
     <servlet-class>org.example.testespacial3.actions.GuardarTest</servlet-class>
   </servlet>
@@ -63,4 +54,7 @@
     <error-code>500</error-code>
     <location>/WEB-INF/error500.html</location>
   </error-page>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
 </web-app>
