@@ -6,127 +6,301 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test de Inteligencia Espacial</title>
+    <title>Aplicación de Test Psicométrico</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #1a365d; color: #ffffff; margin: 0; padding: 20px; }
-        .container { max-width: 850px; margin: auto; background: #2d3748; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .header { border-bottom: 2px solid #4299e1; padding-bottom: 15px; margin-bottom: 25px; }
-        .header h2 { margin: 0; color: #63b3ed; font-size: 28px; }
-        .instructions { background: #4a5568; padding: 15px; border-radius: 6px; margin-bottom: 25px; line-height: 1.6; font-size: 14px; border-left: 5px solid #4299e1; }
-        .timer-container { font-size: 20px; font-weight: bold; color: #fc8181; margin-bottom: 20px; text-align: right; }
-        .pregunta-card { background: #3d4a5d; margin-bottom: 30px; padding: 20px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-        .pregunta-card h4 { margin-top: 0; color: #90cdf4; font-size: 18px; border-bottom: 1px solid #4a5568; padding-bottom: 8px; }
-        .imagen-wrapper { background: #ffffff; padding: 15px; border-radius: 6px; display: inline-block; margin: 15px 0; }
-        .imagen-wrapper img { max-width: 100%; height: auto; display: block; }
-        .opciones-container { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; background: #2d3748; padding: 12px; border-radius: 4px; }
-        .opcion-label { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; border-radius: 4px; background: #4a5568; transition: background 0.2s; }
-        .opcion-label:hover { background: #4299e1; }
-        .opcion-label input { cursor: pointer; transform: scale(1.2); }
-        .btn-submit { display: block; width: 100%; padding: 14px; font-size: 18px; font-weight: bold; color: #fff; background-color: #38a169; border: none; border-radius: 6px; cursor: pointer; transition: background 0.3s; margin-top: 20px; }
-        .btn-submit:hover { background-color: #2f855a; }
-        .alert { padding: 15px; border-radius: 6px; margin-bottom: 25px; text-align: center; font-weight: bold; font-size: 16px; }
-        .alert-success { background-color: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4;}
-        .alert-danger { background-color: #fed7d7; color: #742a2a; border: 1px solid #feb2b2;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+            color: #2d3748;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .test-header {
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        /* ESTILO DEL TEMPORIZADOR DINÁMICO */
+        .timer-container {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background-color: #2b6cb0;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .instructions-box {
+            background-color: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        /* ESTILOS DE LAS PREGUNTAS */
+        .pregunta-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            transition: opacity 0.3s ease;
+        }
+        .question-heading {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2b6cb0;
+        }
+        .imagen-cubos img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #cbd5e0;
+            margin-bottom: 15px;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-label:hover { background: #edf2f7; }
+        .option-label input {
+            transform: scale(1.2);
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        /* BOTONES */
+        .actions-bar {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .btn-submit {
+            background-color: #3182ce;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-submit:hover { background-color: #2b6cb0; }
+        .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; font-weight: bold; }
+        .alert-danger { background-color: #fed7d7; color: #9b2c2c; border: 1px solid #fc8181; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <c:if test="${param.success == 'true'}">
-        <div class="alert alert-success">¡El test se ha procesado y guardado con éxito!</div>
-    </c:if>
+<div class="test-container">
+
     <c:if test="${param.error == 'true'}">
-        <div class="alert alert-danger">Error al guardar el test. Verifique la base de datos.</div>
+        <div class="alert alert-danger">Error al procesar el test. Por favor, contacte con el administrador.</div>
     </c:if>
 
     <c:choose>
         <c:when test="${not empty test}">
+            <div class="test-header">
+                <h2 style="margin-top: 0; color: #2d3748;">${test.nombre != null ? test.nombre : 'Evaluación Psicométrica'}</h2>
+                <div style="font-weight: 500; font-size: 1.1em; color: #4a5568;">
+                    Sujeto: ${sujeto.nombres} ${sujeto.apellidos}
+                </div>
 
-            <div class="header">
-                <h2>${test.nombre != null ? test.nombre : 'Evaluación Espacial'}</h2>
+                <c:if test="${not empty test.instrucciones}">
+                    <div class="instructions-box">
+                        <strong>Instrucciones:</strong><br>
+                            ${test.instrucciones}
+                    </div>
+                </c:if>
+
+                <div class="timer-container" id="timer-box">
+                    Tiempo: <span id="reloj">--:--</span>
+                </div>
             </div>
 
-            <div class="instructions">
-                <strong>Sujeto:</strong> ${sujeto.nombres} ${sujeto.apellidos} <br><br>
-                <strong>Instrucciones:</strong> ${test.instrucciones}
-            </div>
-
-            <div class="timer-container">
-                Tiempo restante: <span id="reloj">--:--</span>
-            </div>
-
-            <form id="formularioTest" action="${pageContext.request.contextPath}/guardarTest" method="post">
+            <form id="formularioTest" action="${pageContext.request.contextPath}/guardarTest" method="POST">
                 <input type="hidden" name="testId" value="${test.id}">
                 <input type="hidden" name="tiempomaximo" value="${test.tiempoMax}">
 
-                <c:forEach var="pregunta" items="${test.preguntas}" varStatus="status">
-                    <div class="pregunta-card">
-
-                        <h4>Pregunta ${status.index + 1}</h4>
-
-                        <c:if test="${not empty imagenes[pregunta.id]}">
-                            <div class="imagen-wrapper">
-                                <img src="data:image/png;base64,${imagenes[pregunta.id]}" alt="Estímulo visual">
+                <div id="preguntas-render-area">
+                    <c:forEach var="pregunta" items="${test.preguntas}" varStatus="status">
+                        <div class="pregunta-card">
+                            <div class="question-heading">
+                                Pregunta ${status.index + 1}
                             </div>
-                        </c:if>
 
-                        <div class="opciones-container">
-                            <c:forEach var="opcion" items="${pregunta.opciones}">
-                                <label class="opcion-label">
-                                    <input type="radio" name="respuesta_${pregunta.id}" value="${opcion.id}" required>
-                                        ${opcion.respuesta}
-                                </label>
-                            </c:forEach>
+                            <c:if test="${not empty imagenes[pregunta.id]}">
+                                <div class="imagen-cubos">
+                                    <img src="data:image/png;base64,${imagenes[pregunta.id]}" alt="Figura de la pregunta">
+                                </div>
+                            </c:if>
+
+                            <div class="options-container">
+                                <c:forEach var="opcion" items="${pregunta.opciones}">
+                                    <label class="option-label">
+                                        <input type="radio" name="respuesta_${pregunta.id}" value="${opcion.id}">
+                                        <span class="option-text">${opcion.respuesta}</span>
+                                    </label>
+                                </c:forEach>
+                            </div>
                         </div>
-                    </div>
-                </c:forEach>
+                    </c:forEach>
+                </div>
 
-                <button type="submit" class="btn-submit">Finalizar y Guardar Test</button>
+                <div class="actions-bar">
+                    <button type="submit" id="finish-button" class="btn-submit">Finalizar y Guardar Test</button>
+                </div>
             </form>
 
             <script>
-                // Temporizador robusto leyendo la variable del modelo
-                let tMaxStr = '${test.tiempoMax}';
-                let tMax = parseFloat(tMaxStr.replace(',', '.')); // Soporte por si usa coma decimal
-                if (isNaN(tMax) || tMax <= 0) tMax = 3.5; // Por defecto
+                const state = {
+                    timerId: null,
+                    locked: false,
+                    tiempoRestante: 0
+                };
 
-                let tiempoRestante = Math.floor(tMax * 60);
+                const elements = {
+                    timer: document.getElementById("reloj"),
+                    timerBox: document.getElementById("timer-box"),
+                    form: document.getElementById("formularioTest"),
+                    finishBtn: document.getElementById("finish-button"),
+                    questions: document.querySelectorAll('.pregunta-card')
+                };
 
-                function actualizarTemporizador() {
-                    let minutos = Math.floor(tiempoRestante / 60);
-                    let segundos = tiempoRestante % 60;
+                document.addEventListener("DOMContentLoaded", init);
 
-                    minutos = minutos < 10 ? "0" + minutos : minutos;
-                    segundos = segundos < 10 ? "0" + segundos : segundos;
+                function init() {
+                    if (elements.form) {
+                        elements.form.addEventListener("submit", handleManualSubmit);
+                    }
 
-                    const relojEl = document.getElementById("reloj");
-                    if (relojEl) relojEl.innerHTML = minutos + ":" + segundos;
-
-                    if (tiempoRestante > 0) {
-                        tiempoRestante--;
-                    } else {
-                        clearInterval(intervalo);
-                        const form = document.getElementById("formularioTest");
-                        if (form) {
-                            form.submit(); // Envío automático si se agota
+                    // Parseo seguro del tiempo (soporta comas o puntos)
+                    let tMaxStr = '${test.tiempoMax}';
+                    let tMax = 3.5; // Respaldo 3:30 min
+                    if (tMaxStr && tMaxStr.trim() !== '') {
+                        let parsed = parseFloat(tMaxStr.replace(',', '.'));
+                        if (!isNaN(parsed) && parsed > 0) {
+                            tMax = parsed;
                         }
+                    }
+
+                    state.tiempoRestante = Math.floor(tMax * 60);
+
+                    updateTimerDisplay();
+                    configureTimer(true);
+                }
+
+                function configureTimer(active) {
+                    if (state.timerId) {
+                        clearInterval(state.timerId);
+                        state.timerId = null;
+                    }
+                    if (!active) return;
+
+                    state.timerId = setInterval(() => {
+                        state.tiempoRestante = Math.max(0, state.tiempoRestante - 1);
+                        updateTimerDisplay();
+
+                        if (state.tiempoRestante === 0) {
+                            clearInterval(state.timerId);
+                            state.timerId = null;
+                            handleTimeUp();
+                        }
+                    }, 1000);
+                }
+
+                function updateTimerDisplay() {
+                    if (!elements.timer) return;
+
+                    const minutes = Math.floor(state.tiempoRestante / 60).toString().padStart(2, "0");
+                    const seconds = (state.tiempoRestante % 60).toString().padStart(2, "0");
+
+                    elements.timer.textContent = `\${minutes}:\${seconds}`;
+
+                    // Alerta visual en el último minuto
+                    if (state.tiempoRestante <= 60 && state.tiempoRestante > 0) {
+                        elements.timerBox.style.backgroundColor = "#e53e3e"; // Rojo
                     }
                 }
 
-                let intervalo = setInterval(actualizarTemporizador, 1000);
-                actualizarTemporizador();
-            </script>
+                function handleTimeUp() {
+                    if (state.locked) return;
 
+                    if (elements.timerBox) {
+                        elements.timerBox.style.backgroundColor = "#9b2c2c";
+                    }
+
+                    if (elements.finishBtn) {
+                        elements.finishBtn.innerHTML = "Tiempo Agotado - Guardando...";
+                        elements.finishBtn.style.backgroundColor = "#9b2c2c";
+                    }
+
+                    // Bloqueo sin 'disabled' para conservar los datos
+                    elements.questions.forEach(card => {
+                        card.style.pointerEvents = "none";
+                        card.style.opacity = "0.6";
+                    });
+
+                    alert("¡El tiempo se ha agotado! Tus respuestas serán guardadas y el test finalizará.");
+
+                    if (elements.form) {
+                        state.locked = true;
+                        elements.form.submit();
+                    }
+                }
+
+                function handleManualSubmit(event) {
+                    if (state.locked) {
+                        event.preventDefault();
+                        return;
+                    }
+                    state.locked = true;
+                    configureTimer(false);
+
+                    if (elements.finishBtn) {
+                        elements.finishBtn.innerHTML = "Procesando resultados...";
+                        elements.finishBtn.style.pointerEvents = "none";
+                    }
+                }
+            </script>
         </c:when>
 
         <c:otherwise>
             <div class="alert alert-danger" style="margin-top: 50px;">
-                No hay ningún test configurado como activo en el sistema o su sesión ha expirado.
+                No hay ningún test configurado como activo en el sistema o la sesión es inválida.
             </div>
         </c:otherwise>
     </c:choose>
-
 </div>
+
 </body>
 </html>
