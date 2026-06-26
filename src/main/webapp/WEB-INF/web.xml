@@ -28,6 +28,33 @@
     <url-pattern>/registro</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>cargarTest</servlet-name>
+    <servlet-class>org.example.testespacial3.actions.CargarTest</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>cargarTest</servlet-name>
+    <url-pattern>/cargarTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>guardarTest</servlet-name>
+    <servlet-class>org.example.testespacial3.actions.GuardarTest</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>guardarTest</servlet-name>
+    <url-pattern>/guardarTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>procesarLogin</servlet-name>
+    <servlet-class>org.example.testespacial3.actions.ProcesarLogin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>procesarLogin</servlet-name>
+    <url-pattern>/procesarLogin</url-pattern>
+  </servlet-mapping>
+
   <error-page>
     <error-code>404</error-code>
     <location>/WEB-INF/error404.html</location>

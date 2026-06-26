@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso - Test de Inteligencia Espacial</title>
     <link rel="stylesheet" href="css/login.css">
 </head>
-
 <body>
 
 <main class="shell">
@@ -24,23 +21,35 @@
         </div>
 
         <div class="entry">
-            <h3>Entrar como administrador</h3>
-            <p>Accede al entorno OpenXava con las funciones de administración.</p>
-            <div class="actions">
-                <a class="button primary" href="/testespacial3/m/SignIn">Ir a OpenXava</a>
+            <h3>Entrar como paciente</h3>
+            <p>Ingresa tus credenciales para realizar el test.</p>
+            <form action="/testespacial3/procesarLogin" method="POST">
+                <div style="margin-bottom: 10px;">
+                    <input type="text" name="username" placeholder="Nombre de usuario" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <input type="password" name="password" placeholder="Contraseña" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                </div>
+                <div class="actions">
+                    <button type="submit" class="button primary" style="width: 100%; cursor: pointer; border: none; font-size: 16px;">Iniciar Sesión</button>
+                </div>
+            </form>
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="/testespacial3/html/registro.html" style="color: #007BFF; text-decoration: none; font-size: 14px;">¿No tienes cuenta? Regístrate aquí</a>
             </div>
         </div>
 
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
         <div class="entry">
-            <h3>Registrarme como paciente</h3>
-            <p>Si no tienes cuenta, abre el formulario de registro para crearla.</p>
+            <h3>Administración</h3>
+            <p>Acceso exclusivo al entorno OpenXava para gestionar el sistema.</p>
             <div class="actions">
-                <a class="button secondary" href="/testespacial3/html/registro.html">Abrir registro</a>
+                <a class="button secondary" href="/testespacial3/m/SignIn">Ir a Panel Admin</a>
             </div>
         </div>
     </section>
 </main>
 
 </body>
-
 </html>
